@@ -1,24 +1,52 @@
 from typing import Callable
 
-from .abstract_element import AbstractElement
+from .abstract_elements import AbstractElements
 from .button import Button
 
 
-class Switch(AbstractElement):
-    def __init__(self, x: int, y: int, width: int, height: int, texts: tuple[str, str], actions: tuple[Callable, Callable] = None, font_size: int = 20, font_type: str = "comicsans", color: str = "black", text_color: str = "white", outline: str = "white"):
-        super().__init__(x, y, texts, font_size, font_type, color, text_color)
+class Switch(AbstractElements):
+    def __init__(self, x: int, y: int, width: int, height: int, texts: tuple[str, str], actions: tuple[Callable, Callable] = None, font_size: int = 20):
 
-        self.button1 = Button(x-width,y,width,height,actions[0],texts[0],font_size, font_type, color, text_color, outline)
-        self.button2 = Button(x,y,width,height,actions[1],texts[1],font_size, font_type, color, text_color, outline)
+        self.button1 = Button(0,0,width,height,action=actions[0],text=texts[0],font_size=font_size)
+        self.button2 = Button(0,0,width,height,action=actions[1],text=texts[1],font_size=font_size)
 
-    def draw(self, screen):
-        self.button1.draw(screen)
-        self.button2.draw(screen)
+        self.select_button1()
+
+        super().__init__(
+            x=x,
+            y=y,
+            space_inbetween=[0],
+            elements=[self.button1, self.button2]
+        )
+
+    def select_button1(self):
+        self._selected_button1 = True
+        self.button1.select()
+        self.button2.deselect()
+
+    def deselect_button1(self):
+        self._selected_button1 = False
+        self.button1.deselect()
+        self.button2.select()
+
+    def set_text(self, texts: tuple[str, str]):
+        self.button1.set_text(texts[0])
+        self.button2.set_text(texts[1])
 
     def click_listen(self, pos: tuple):
-        self.button1.click_listen(pos)
-        self.button2.click_listen(pos)
+        if self._selected_button1:
+            self.button2.click_listen(pos)
+
+            if self.button2.is_over(pos):
+                self.deselect_button1()
+        else:
+            self.button1.click_listen(pos)
+
+            if self.button1.is_over(pos):
+                self.select_button1()
 
     def hover_listen(self, pos: tuple):
-        self.button1.hover_listen(pos)
-        self.button2.hover_listen(pos)
+        if self._selected_button1:
+            self.button2.hover_listen(pos)
+        else:
+            self.button1.hover_listen(pos)

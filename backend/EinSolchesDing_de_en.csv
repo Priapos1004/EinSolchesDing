@@ -10,7 +10,7 @@
 8,Haare,"Hat Haare/Zotten/Borsten, aber keine Augen",hair,Has hair/villi/bristles but no eyes
 9,flicken,"Wird wieder repariert, wenn es kaputt geht",mend,Will be repaired if it breaks
 10,Stall,"Passt in einen Pferdestall, aber nicht in eine Telefonzelle",stable,Fits in a horse stable but not in a telephone box
-11,Gehege,Haben bestimmte Tiere in ihrem Gehege,enclosure,Has certain animals in its enclosure
+11,Gehege,Haben bestimmte Tiere in ihrem Gehege,enclosure,Certain animals have it in their enclosure
 12,Holz,Besteht hauptsächlich aus Holz,wood,Is mainly made of wood
 13,untergehen,Würde im Wasser untergehen,sink,Would sink in water
 14,heben,Könnte ich nicht hochheben,lift,Couldn't lift
@@ -36,13 +36,13 @@
 34,gesehen,Habe ich noch keine fünf-mal gesehen,seen,Haven't seen it five times
 35,fiktiv,Gibt es in Wirklichkeit nicht,fictional,Doesn't really exist
 36,Uni,Wird in einer Universitätsvorlesung besprochen,university,Is discussed in a university lecture
-37,halten,Kann ich nicht in einer Hand halten,hold,Can't hold in one hand
+37,halten,Kann ich nicht in einer Hand halten,hold,I can't hold it in one hand
 38,Fitness,Fördert bei richtigem Gebrauch die Fitness,fitness,Improves fitness when used correctly
 39,fixiert,Ist an einen Ort fixiert/gebunden und ändert diesen kaum,fixed,Is fixed/bound to one place and hardly changes it
 40,Stange/Seil,Ist an einer Stange/Seil befestigt,pole/rope,Is attached to a pole/rope
 41,Boden,Berührt in der Regel nicht den Boden,floor,Usually doesn't touch the ground
 42,drehen,Hat einen drehbaren Teil,rotating,Has a rotating part
-43,unnatürlich,Ist nicht natürlich,unnatural,Is not natural
+43,unnatürlich,Ist nicht natürlich,unnatural,Is not natural/organic
 44,waschen,Ist ohne Weiteres ab-/waschbar,wash,Is easily removable/washable
 45,Kosten,Kostet weniger als 10 Euro,cost,Costs less than 10 euros
 46,Musik,Kann zum Musikmachen verwendet werden,music,Can be used to make music
@@ -70,7 +70,7 @@
 68,>100 Jahre,Wurde schon vor 100 Jahren verwendet,>100 years,Was already used 100 years ago
 69,Strom,Braucht Strom,electricity,Needs electricity
 70,Tod,War leider schon Grund für viele Tode,death,Unfortunately has been the cause of many deaths
-71,jeder,Benutzt jeder Mensch in seinem Leben,everyone,Everyone uses it in their life
+71,jeder,Benutzt jeder Mensch in seinem Leben,everyone,Everyone uses it in their life (colloquial sense)
 72,teurer,War früher teurer,deflation,Used to be more expensive in the past
 73,Wunsch,Wünschen sich viele Kinder,wish,Many children wish for it
 74,Antike,Gab es schon zur Zeit der alten Griechen,antiquity,Existed in the time of the ancient Greeks
@@ -82,7 +82,7 @@
 80,Schuss,Könnte einen Pistolenschuss abfangen,gunshot,Could stop a gunshot
 81,falten,Kann ich in der Mitte falten,fold,I can fold it in half
 82,Tür,Passt durch die nächstgelegende Tür,door,Fits through the nearest door
-83,einweg,Kann man nur einmal verwenden,one-way,Can only be used once
+83,einweg,Kann man nur einmal verwenden,once,Can only be used once
 84,aussprechen,Kann ich sexy aussprechen,pronounce,Can be pronounced sexy
 85,Unterwasser,Ist 10 Meter Unterwasser immer noch voll funktionsfähig,underwater,Is still fully functional 10 metres underwater
 86,Bewegung,Bewegt sich in der Regel,movement,Usually moves

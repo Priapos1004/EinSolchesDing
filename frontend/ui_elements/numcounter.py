@@ -1,24 +1,22 @@
-from .abstract_element import AbstractElement
+from .abstract_elements import AbstractElements
 from .button import Button
 from .label import Label
 
 
-class NumCounter(AbstractElement):
-    space_inbetween = 25 # space between counter and button
+class NumCounter(AbstractElements):
 
-    def __init__(self, x: int, y: int,  min_value: int, max_value: int, default_value: int, text: str = "", font_size: int = 40, font_type: str = "comicsans", color: str = "black", text_color: str = "white", outline: str = "white"):
-        super().__init__(x, y, text, font_size, font_type, color, text_color)
+    space_inbetween: list[int] = [20, 25, 25]
+    button_width = 100
+    button_height = 60
 
+    def __init__(self, x: int, y: int,  min_value: int, max_value: int, default_value: int, text: str = "", font_size: int = 40, bg_color: str = "black", outline_color: str = "white", text_color: str = "white"):
         self.min_value = min_value
         self.max_value = max_value
         self.default_value = default_value
         self._counter: int = default_value # counter for label
 
-        counter_length = self.font.render(str(default_value), 1, self.text_color).get_width()
-        mid_length = (self.rendered_text.get_width()+counter_length+220+2*self.space_inbetween)//2
-
-        self.text_label = Label(self.x - mid_length + self.rendered_text.get_width()//2, self.y, self.text, font_size, font_type, text_color)
-        self.counter_label = Label(self.x + mid_length - 100 - self.space_inbetween - counter_length//2, self.y, str(default_value), font_size, font_type, text_color)
+        self.text_label = Label(0, 0, text=text, font_size=font_size, text_color=text_color)
+        self.counter_label = Label(0, 0, text=str(default_value), font_size=font_size, text_color=text_color)
 
         def plus_counter():
             self._counter += 1
@@ -28,8 +26,15 @@ class NumCounter(AbstractElement):
             self._counter -= 1
             self.counter_label.set_text(str(self._counter))
 
-        self.minus_button = Button(self.x - mid_length + self.rendered_text.get_width() + 20, self.y - self.rendered_text.get_height() // 2 + 5, 100, 50, action=minus_counter, text="-", font_size=font_size, font_type=font_type, color=color, text_color=text_color, outline=outline)
-        self.plus_button = Button(self.x + mid_length - 100, self.y - self.rendered_text.get_height() // 2 + 5, 100, 50, action=plus_counter, text="+", font_size=font_size, font_type=font_type, color=color, text_color=text_color, outline=outline)
+        self.minus_button = Button(0, 0, self.button_width, self.button_height, action=minus_counter, text="-", font_size=font_size, bg_color=bg_color, text_color=text_color, outline_color=outline_color)
+        self.plus_button = Button(0, 0, self.button_width, self.button_height, action=plus_counter, text="+", font_size=font_size, bg_color=bg_color, text_color=text_color, outline_color=outline_color)
+
+        super().__init__(
+            x=x,
+            y=y,
+            space_inbetween=self.space_inbetween,
+            elements=[self.text_label, self.minus_button, self.counter_label, self.plus_button]
+        )
 
     @property
     def counter(self) -> int:
@@ -40,10 +45,7 @@ class NumCounter(AbstractElement):
         self.counter_label.set_text(str(self._counter))
 
     def draw(self, screen):
-        self.text_label.draw(screen)
-        self.counter_label.draw(screen)
-        self.plus_button.draw(screen)
-        self.minus_button.draw(screen)
+        super().draw(screen)
 
         if self.counter > self.min_value:
             self.minus_button.enable()
@@ -54,11 +56,3 @@ class NumCounter(AbstractElement):
             self.plus_button.enable()
         else:
             self.plus_button.disable()
-
-    def click_listen(self, pos):
-        self.plus_button.click_listen(pos)
-        self.minus_button.click_listen(pos)
-
-    def hover_listen(self, pos):
-        self.plus_button.hover_listen(pos)
-        self.minus_button.hover_listen(pos)
