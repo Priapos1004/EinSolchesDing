@@ -18,6 +18,9 @@ class Switch(AbstractElements):
             space_inbetween=[0],
             elements=[self.button1, self.button2]
         )
+    
+    def get_current_button_text(self):
+        return [self.button1, self.button2][1 - int(self._selected_button1)].text
 
     def select_button1(self):
         self._selected_button1 = True

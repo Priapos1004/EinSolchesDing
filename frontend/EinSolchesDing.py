@@ -25,23 +25,26 @@ def exit_game():
 def back_to_menu():
     nav.current_state = "main"
 
-start_button = Button(nav.screen_width // 2, nav.screen_height // 2.5, 200, 100, action=change_screen, text='Start')
+start_button = Button(nav.screen_width // 2, nav.screen_height // 2.5 + 50, 200, 100, action=change_screen, text='Start')
 main_frame.add_element(start_button, "start_button")
 
-exit_button = Button(nav.screen_width // 2, nav.screen_height // 2.5 + 150, 200, 100, action=exit_game, text='Exit')
+exit_button = Button(nav.screen_width // 2, nav.screen_height // 2.5 + 200, 200, 100, action=exit_game, text='Exit')
 main_frame.add_element(exit_button, "exit_button")
 
-player_counter = NumCounter(nav.screen_width // 2, nav.screen_height // 2.5 - 150, 2, 5, 2, "Players:")
+player_counter = NumCounter(nav.screen_width // 2, nav.screen_height // 2.5 -100, 2, 5, 2, "Players:")
 main_frame.add_element(player_counter, "player_counter")
+
+language_switch = Switch(nav.screen_width // 2, nav.screen_height // 2.5 - 200, 100, 50, ("de", "en"), (None, None))
+main_frame.add_element(language_switch, "language_switch")
 
 nav.add_frame(main_frame, "main")
 
 ### create game frame ###
 class ESDFrame(Frame):
-    def __init__(self, player_number: int):
+    def __init__(self, player_number: int, language: str):
         self.screen_color = (0,0,0)
         self.game = EinSolchesDing()
-        self.game.generate_round(player_number, "en")
+        self.game.generate_round(player_number, language)
 
         self.elements = [] # list with all elements of the frame
         self.static_elements = {}
@@ -119,7 +122,7 @@ class ESDFrame(Frame):
 
 
 def create_game():
-    game_frame = ESDFrame(player_counter.counter)
+    game_frame = ESDFrame(player_counter.counter, language_switch.get_current_button_text())
 
     def view_switch_played():
         game_frame.current_view = game_frame.game.player_number

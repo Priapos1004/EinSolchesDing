@@ -13,8 +13,8 @@
 11,Gehege,Haben bestimmte Tiere in ihrem Gehege,enclosure,Certain animals have it in their enclosure
 12,Holz,Besteht hauptsächlich aus Holz,wood,Is mainly made of wood
 13,untergehen,Würde im Wasser untergehen,sink,Would sink in water
-14,heben,Könnte ich nicht hochheben,lift,Couldn't lift
-15,bauen,Könnte ich selbst bauen/herstellen/anfertigen,build,Could build/make/fabricate myself
+14,heben,Könnte ich nicht hochheben,lift,I couldn't lift
+15,bauen,Könnte ich selbst bauen/herstellen/anfertigen,build,I could build/make/fabricate it myself
 16,glänzt,Glänzt/schimmert/leuchtet/spiegelt,shines,Shines/shimmers/glows/mirrors
 17,feuerfest,Kann ich mit einem Feuerzeug nicht anzünden,fireproof,Can't be lit with a lighter
 18,2. Klasse,Würde in der 2. Klasse als Beleidigung durchgehen,2nd class,Would pass as an insult in 2nd class
@@ -62,7 +62,7 @@
 60,schießen,Kann ich 5 Meter weit mit meinem Fuß schießen,shoot,I can shot it 5 metres with my foot
 61,biegbar,Kann ich mit meinen bloßen Händen verbiegen,bendable,I can bent it with my bare hands
 62,rau,"Besitzt raue Stellen, welche man wie Sandpapier verwenden könnte",rough,Has rough spots that could be used like sandpaper
-63,Duden,Hat im Duden die Verwendungshäufigkeit 1 oder 2,Google's Ngram Viewer,Has the frequency of use <0.0001 in Google's Ngram Viewer
+63,Duden,Hat im Duden die Verwendungshäufigkeit 1 oder 2,Ngram Viewer,Has the frequency of use <0.0001% in Google's Ngram Viewer
 64,Rakete,Könnte man in einer Rakete ins Weltall fliegen,rocket,Could be flown into space in a rocket
 65,Land,"Ist in Deutschland zwar normal, aber in anderen Ländern eher selten",country,"Is normal in Germany, but rather rare in other countries"
 66,Süden,Ist vorallem bei Südländern verbreitet,south,Is mainly found in the Mediterranean region
