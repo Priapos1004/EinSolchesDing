@@ -79,7 +79,3 @@ docker compose up --build
 ### Game Data
 
 94 bilingual cards in `packages/backend/src/data/EinSolchesDing_de_en.csv`. Columns: `keyword_de`, `info_de`, `keyword_en`, `info_en`. Loaded once at startup.
-
-## Legacy Code
-
-The original Pygame version is still in `backend/` and `frontend/` (root level). The web rewrite lives in `packages/`.
