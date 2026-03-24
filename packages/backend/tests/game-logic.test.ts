@@ -125,6 +125,24 @@ describe("playCard", () => {
     }
   });
 
+  test("rejects play when round is ending (zero cards player exists)", () => {
+    const state = createGameState("test11b", cards, 2, "en", 1);
+    state.status = "playing";
+    // Player 0 plays their only card, triggering zero_cards_player
+    const played = playCard(state, 0, state.player_hands[0][0].keyword);
+    expect("error" in played).toBe(false);
+    if (!("error" in played)) {
+      expect(played.zero_cards_player).toBe(0);
+      // Player 1 (now current) tries to play — should be rejected
+      const keyword = played.player_hands[1][0].keyword;
+      const result = playCard(played, 1, keyword);
+      expect("error" in result).toBe(true);
+      if ("error" in result) {
+        expect(result.error).toBe("Round is ending, no more plays");
+      }
+    }
+  });
+
   test("detects zero cards", () => {
     const state = createGameState("test11", cards, 2, "en", 1);
     state.status = "playing";

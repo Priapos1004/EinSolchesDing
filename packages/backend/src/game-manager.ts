@@ -59,8 +59,8 @@ export class GameManager {
     // Save draw stack
     const stackKey = key(state.game_id, "draw_stack");
     await redis.del(stackKey);
-    for (const card of state.draw_stack) {
-      await redis.rpush(stackKey, JSON.stringify(card));
+    if (state.draw_stack.length > 0) {
+      await redis.rpush(stackKey, ...state.draw_stack.map((c) => JSON.stringify(c)));
     }
     await redis.expire(stackKey, TTL);
   }
@@ -96,12 +96,8 @@ export class GameManager {
     }
 
     const stackKey = key(gameId, "draw_stack");
-    const stackLen = await redis.llen(stackKey);
-    const draw_stack: Card[] = [];
-    for (let i = 0; i < stackLen; i++) {
-      const raw = await redis.lindex(stackKey, i);
-      if (raw) draw_stack.push(JSON.parse(raw));
-    }
+    const rawStack = await redis.lrange(stackKey, 0, -1);
+    const draw_stack: Card[] = rawStack.map((raw) => JSON.parse(raw));
 
     return {
       game_id: gameId,
