@@ -9,7 +9,9 @@
       "Bash(bunx --bun tsc --noEmit)",
       "Bash(bun run:*)",
       "Bash(docker compose:*)",
-      "Bash(docker --version)"
+      "Bash(docker --version)",
+      "Bash(./node_modules/.bin/tsc --noEmit -p packages/frontend/tsconfig.app.json)",
+      "Bash(bunx tsc:*)"
     ]
   }
 }

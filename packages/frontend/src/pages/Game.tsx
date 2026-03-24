@@ -1,18 +1,20 @@
 import { useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useGameStore } from "../store/gameStore";
+import { useGameStore, useIsMyTurn } from "../store/gameStore";
 import { connectSSE } from "../api/sse";
 import { getSessionToken } from "../api/http";
 import PlayerTabs from "../components/PlayerTabs";
 import CardList from "../components/CardList";
 import ActionBar from "../components/ActionBar";
 import VoteModal from "../components/VoteModal";
+import VoteResultModal from "../components/VoteResultModal";
 import WinnerModal from "../components/WinnerModal";
 
 export default function Game() {
   const { gameId } = useParams<{ gameId: string }>();
   const navigate = useNavigate();
   const { status, handleEvent, reset } = useGameStore();
+  const isMyTurn = useIsMyTurn();
   const cleanupRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
@@ -51,10 +53,16 @@ export default function Game() {
   return (
     <div className="max-w-lg mx-auto p-4 pb-24 min-h-screen">
       <h1 className="text-xl font-bold text-center mb-4">EinSolchesDing</h1>
+      {isMyTurn && (
+        <div className="bg-amber-600/20 border border-amber-600 text-amber-300 text-center py-2 rounded-lg mb-3 text-sm font-medium animate-pulse">
+          Your turn!
+        </div>
+      )}
       <PlayerTabs />
       <CardList gameId={gameId} />
       <ActionBar gameId={gameId} />
       <VoteModal gameId={gameId} />
+      <VoteResultModal />
       <WinnerModal />
     </div>
   );

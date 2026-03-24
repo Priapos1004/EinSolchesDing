@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useGameStore } from "../store/gameStore";
+import { useState, useEffect, useRef } from "react";
+import { useGameStore, useIsMyTurn } from "../store/gameStore";
 import Card from "./Card";
 import CardInfoModal from "./CardInfoModal";
 import type { Card as CardType } from "@esd/shared";
@@ -9,11 +9,20 @@ interface Props {
 }
 
 export default function CardList({ gameId }: Props) {
-  const { yourHand, playedCards, currentPlayer, yourIndex } = useGameStore();
+  const { yourHand, playedCards } = useGameStore();
+  const isMyTurn = useIsMyTurn();
   const [view, setView] = useState<"hand" | "played">("hand");
   const [selectedCard, setSelectedCard] = useState<CardType | null>(null);
+  const prevPlayedCount = useRef(playedCards.length);
 
-  const isMyTurn = currentPlayer === yourIndex;
+  // Auto-switch to "played" tab when a new card is played
+  useEffect(() => {
+    if (playedCards.length > prevPlayedCount.current) {
+      setView("played");
+    }
+    prevPlayedCount.current = playedCards.length;
+  }, [playedCards.length]);
+
   const cards = view === "hand" ? yourHand : playedCards;
 
   return (

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import type {
   GameStateEvent,
   VoteState,
+  VoteResultEvent,
   PlayerInfo,
   Card,
   SSEEvent,
@@ -23,9 +24,13 @@ interface GameStore {
   playedCards: Card[];
   activeVote: VoteState | null;
   winner: { player_index: number; display_name: string } | null;
+  voteResult: Omit<VoteResultEvent, "type"> | null;
 
   // Handle SSE events
   handleEvent: (event: SSEEvent) => void;
+
+  // Actions
+  clearVoteResult: () => void;
 
   // Reset
   reset: () => void;
@@ -45,6 +50,7 @@ export const useGameStore = create<GameStore>((set) => ({
   playedCards: [],
   activeVote: null,
   winner: null,
+  voteResult: null,
 
   handleEvent: (event) => {
     switch (event.type) {
@@ -104,7 +110,14 @@ export const useGameStore = create<GameStore>((set) => ({
         break;
 
       case "vote_result":
-        set({ activeVote: null });
+        set({
+          activeVote: null,
+          voteResult: {
+            valid: event.valid,
+            target: event.target,
+            cards_drawn_by: event.cards_drawn_by,
+          },
+        });
         break;
 
       case "winner":
@@ -117,6 +130,8 @@ export const useGameStore = create<GameStore>((set) => ({
         break;
     }
   },
+
+  clearVoteResult: () => set({ voteResult: null }),
 
   reset: () =>
     set({
@@ -131,5 +146,9 @@ export const useGameStore = create<GameStore>((set) => ({
       playedCards: [],
       activeVote: null,
       winner: null,
+      voteResult: null,
     }),
 }));
+
+export const useIsMyTurn = () =>
+  useGameStore((s) => s.status === "playing" && s.currentPlayer === s.yourIndex);

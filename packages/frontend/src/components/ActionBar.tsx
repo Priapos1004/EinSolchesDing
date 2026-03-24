@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGameStore } from "../store/gameStore";
+import { useGameStore, useIsMyTurn } from "../store/gameStore";
 import { startVote, getSessionToken } from "../api/http";
 
 interface Props {
@@ -8,10 +8,11 @@ interface Props {
 
 export default function ActionBar({ gameId }: Props) {
   const { playedCards, activeVote } = useGameStore();
+  const isMyTurn = useIsMyTurn();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const canChallenge = playedCards.length > 0 && !activeVote;
+  const canChallenge = playedCards.length > 0 && !activeVote && isMyTurn;
 
   const handleChallenge = async () => {
     const sessionToken = getSessionToken(gameId);

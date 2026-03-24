@@ -147,6 +147,13 @@ export async function handleVoteStart(
     );
   }
 
+  if (session.player_index !== state.current_player) {
+    return Response.json(
+      { error: "Only the current player can challenge" },
+      { status: 403 }
+    );
+  }
+
   const existingVote = await gameManager.getVote(gameId);
   if (existingVote) {
     return Response.json(
