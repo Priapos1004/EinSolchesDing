@@ -242,10 +242,9 @@ export async function handleVoteCast(
     const loserIndex = valid ? vote.initiator : vote.target;
     state = drawTwoCards(state, loserIndex);
 
-    // If answer was invalid, move turn back to target (they get another turn)
-    if (!valid) {
-      state = { ...state, current_player: vote.target };
-    }
+    // Vote winner gets the next turn
+    const winnerIndex = valid ? vote.target : vote.initiator;
+    state = { ...state, current_player: winnerIndex };
 
     await gameManager.updateGameState(state);
     await gameManager.deleteVote(gameId);
