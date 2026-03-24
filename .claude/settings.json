@@ -13,7 +13,13 @@
       "Bash(./node_modules/.bin/tsc --noEmit -p packages/frontend/tsconfig.app.json)",
       "Bash(bunx tsc:*)",
       "Bash(grep -n \"console.error\\\\|console.log\" /Users/samuelbrinkmann/Documents/GitHub/EinSolchesDing/packages/backend/src/*.ts /Users/samuelbrinkmann/Documents/GitHub/EinSolchesDing/packages/frontend/src/**/*.ts*)",
-      "Bash(bun add:*)"
+      "Bash(bun add:*)",
+      "Bash(redis-cli ping:*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:80)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/api/health)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/)",
+      "Bash(docker exec:*)",
+      "Bash(curl -s -X POST http://localhost:8000/api/admin/login -H \"Content-Type: application/json\" -d '{\"\"\"\"username\"\"\"\":\"\"\"\"admin\"\"\"\",\"\"\"\"password\"\"\"\":\"\"\"\"changeme\"\"\"\"}')"
     ]
   }
 }
