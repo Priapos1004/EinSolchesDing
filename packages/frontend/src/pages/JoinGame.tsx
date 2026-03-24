@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { getGameInfo, joinGame, setSessionToken } from "../api/http";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Users, Globe, Loader2, UserPlus } from "lucide-react";
 
 export default function JoinGame() {
   const { gameId } = useParams<{ gameId: string }>();
@@ -54,70 +58,80 @@ export default function JoinGame() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-400">Loading game...</p>
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-sm space-y-4">
-        <h1 className="text-2xl font-bold text-center">EinSolchesDing</h1>
-        <p className="text-gray-400 text-center text-sm">Join Game</p>
+    <div className="flex items-center justify-center min-h-screen p-4">
+      <div className="bg-card border border-border p-8 rounded-xl shadow-2xl w-full max-w-sm space-y-5 animate-fade-in-up">
+        <div className="text-center space-y-1">
+          <h1 className="text-2xl font-bold tracking-tight">EinSolchesDing</h1>
+          <p className="text-muted-foreground text-sm">Join Game</p>
+        </div>
 
         {error && (
-          <div className="bg-red-900/50 text-red-300 p-3 rounded text-sm">
+          <div className="bg-destructive/15 text-destructive border border-destructive/30 p-3 rounded-lg text-sm animate-fade-in">
             {error}
           </div>
         )}
 
         {gameInfo && (
           <>
-            <div className="bg-gray-700 p-4 rounded space-y-2 text-sm">
-              <p>
-                Language:{" "}
-                <span className="text-amber-400">
+            <div className="bg-secondary/50 border border-border p-4 rounded-lg space-y-3 text-sm">
+              <div className="flex items-center gap-2">
+                <Globe className="h-4 w-4 text-muted-foreground" />
+                <span className="text-muted-foreground">Language:</span>
+                <Badge variant="default" className="ml-auto">
                   {gameInfo.language === "de" ? "Deutsch" : "English"}
-                </span>
-              </p>
-              <p>
-                Players:{" "}
-                <span className="text-amber-400">
+                </Badge>
+              </div>
+              <div className="flex items-center gap-2">
+                <Users className="h-4 w-4 text-muted-foreground" />
+                <span className="text-muted-foreground">Players:</span>
+                <Badge variant="secondary" className="ml-auto">
                   {gameInfo.joined_count} / {gameInfo.player_count}
-                </span>
-              </p>
+                </Badge>
+              </div>
               {gameInfo.players.length > 0 && (
-                <p>
-                  Joined:{" "}
-                  <span className="text-gray-300">
-                    {gameInfo.players.map((p) => p.name).join(", ")}
-                  </span>
-                </p>
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {gameInfo.players.map((p) => (
+                    <Badge key={p.index} variant="outline" className="text-xs">
+                      {p.name}
+                    </Badge>
+                  ))}
+                </div>
               )}
             </div>
 
             {gameInfo.joined_count < gameInfo.player_count ? (
               <form onSubmit={handleJoin} className="space-y-4">
-                <input
+                <Input
                   type="text"
                   placeholder="Your name"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="w-full p-3 bg-gray-700 rounded border border-gray-600 focus:border-amber-500 focus:outline-none"
                   required
                   maxLength={20}
                   autoFocus
                 />
-                <button
+                <Button
                   type="submit"
                   disabled={joining || !displayName.trim()}
-                  className="w-full p-3 bg-green-600 hover:bg-green-700 rounded font-semibold disabled:opacity-50 transition"
+                  variant="success"
+                  className="w-full"
                 >
+                  <UserPlus className="h-4 w-4" />
                   {joining ? "Joining..." : "Join Game"}
-                </button>
+                </Button>
               </form>
             ) : (
-              <p className="text-center text-yellow-400">Game is full</p>
+              <div className="text-center">
+                <Badge variant="destructive" className="text-sm px-3 py-1">
+                  Game is full
+                </Badge>
+              </div>
             )}
           </>
         )}

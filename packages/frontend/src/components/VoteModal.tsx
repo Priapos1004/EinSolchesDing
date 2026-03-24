@@ -1,6 +1,16 @@
 import { useState, useEffect } from "react";
 import { useGameStore, usePlayerName } from "../store/gameStore";
 import { castVote, getSessionToken } from "../api/http";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ThumbsUp, ThumbsDown, Loader2, Scale } from "lucide-react";
 
 interface Props {
   gameId: string;
@@ -41,43 +51,66 @@ export default function VoteModal({ gameId }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-800 rounded-xl p-6 max-w-sm w-full space-y-4 text-center">
-        <h2 className="text-lg font-bold">
-          Was {activeVote.target_name}'s answer valid?
-        </h2>
+    <Dialog open>
+      <DialogContent hideClose className="text-center">
+        <DialogHeader className="items-center">
+          <div className="mx-auto w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center mb-2">
+            <Scale className="h-6 w-6 text-primary" />
+          </div>
+          <DialogTitle className="text-lg">
+            Was {activeVote.target_name}'s answer valid?
+          </DialogTitle>
+          <DialogDescription>
+            {isTarget
+              ? `${initiatorName} is challenging you`
+              : voted
+                ? "Your vote has been cast"
+                : "Cast your vote"}
+          </DialogDescription>
+        </DialogHeader>
 
         {/* Vote tally */}
-        <div className="flex justify-center gap-6 text-sm">
-          <span className="text-green-400">Yes: {yesCount}</span>
-          <span className="text-red-400">No: {noCount}</span>
+        <div className="flex justify-center gap-4 py-2">
+          <Badge variant="success" className="text-sm px-3 py-1 gap-1.5">
+            <ThumbsUp className="h-3.5 w-3.5" />
+            {yesCount}
+          </Badge>
+          <Badge variant="destructive" className="text-sm px-3 py-1 gap-1.5">
+            <ThumbsDown className="h-3.5 w-3.5" />
+            {noCount}
+          </Badge>
         </div>
 
-        {isTarget ? (
-          <p className="text-gray-400">
-            {initiatorName} is challenging you. Waiting for votes...
-          </p>
-        ) : voted ? (
-          <p className="text-gray-400">Vote cast. Waiting for others...</p>
+        {isTarget || voted ? (
+          <div className="flex items-center justify-center gap-2 text-muted-foreground py-2">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span className="text-sm">
+              {isTarget ? "Waiting for votes..." : "Waiting for others..."}
+            </span>
+          </div>
         ) : (
-          <div className="flex gap-3">
-            <button
+          <div className="flex gap-3 pt-1">
+            <Button
               onClick={() => handleVote(true)}
               disabled={loading}
-              className="flex-1 p-3 bg-green-600 hover:bg-green-700 rounded font-semibold disabled:opacity-50 transition"
+              variant="success"
+              className="flex-1"
             >
+              <ThumbsUp className="h-4 w-4" />
               Yes, valid
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => handleVote(false)}
               disabled={loading}
-              className="flex-1 p-3 bg-red-600 hover:bg-red-700 rounded font-semibold disabled:opacity-50 transition"
+              variant="destructive"
+              className="flex-1"
             >
+              <ThumbsDown className="h-4 w-4" />
               No, invalid
-            </button>
+            </Button>
           </div>
         )}
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

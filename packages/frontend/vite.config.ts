@@ -7,6 +7,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@esd/shared": path.resolve(__dirname, "../shared/src/types"),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   server: {

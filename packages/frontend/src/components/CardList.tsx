@@ -2,7 +2,18 @@ import { useState, useEffect, useRef } from "react";
 import { useGameStore, useIsMyTurn } from "../store/gameStore";
 import Card from "./Card";
 import CardInfoModal from "./CardInfoModal";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Hand, Layers } from "lucide-react";
 import type { Card as CardType } from "@esd/shared";
+
+function EmptyState({ text }: { text: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+      <Layers className="h-8 w-8 mb-2 opacity-40" />
+      <p className="text-sm">{text}</p>
+    </div>
+  );
+}
 
 interface Props {
   gameId: string;
@@ -23,50 +34,52 @@ export default function CardList({ gameId }: Props) {
     prevPlayedCount.current = playedCards.length;
   }, [playedCards.length]);
 
-  const cards = view === "hand" ? yourHand : playedCards;
-
   return (
     <div>
-      {/* View toggle */}
-      <div className="flex gap-2 mb-3">
-        <button
-          onClick={() => setView("hand")}
-          className={`flex-1 py-2 rounded font-medium text-sm transition ${
-            view === "hand"
-              ? "bg-amber-600"
-              : "bg-gray-700 hover:bg-gray-600"
-          }`}
-        >
-          Your Hand ({yourHand.length})
-        </button>
-        <button
-          onClick={() => setView("played")}
-          className={`flex-1 py-2 rounded font-medium text-sm transition ${
-            view === "played"
-              ? "bg-amber-600"
-              : "bg-gray-700 hover:bg-gray-600"
-          }`}
-        >
-          Played ({playedCards.length})
-        </button>
-      </div>
+      <Tabs value={view} onValueChange={(v) => setView(v as "hand" | "played")}>
+        <TabsList>
+          <TabsTrigger value="hand">
+            <Hand className="h-4 w-4 mr-1.5" />
+            Your Hand ({yourHand.length})
+          </TabsTrigger>
+          <TabsTrigger value="played">
+            <Layers className="h-4 w-4 mr-1.5" />
+            Played ({playedCards.length})
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Cards */}
-      <div className="space-y-2">
-        {cards.length === 0 ? (
-          <p className="text-gray-500 text-center py-8 text-sm">
-            {view === "hand" ? "No cards in hand" : "No cards played yet"}
-          </p>
-        ) : (
-          cards.map((card) => (
-            <Card
-              key={card.keyword}
-              card={card}
-              onClick={() => setSelectedCard(card)}
-            />
-          ))
-        )}
-      </div>
+        <TabsContent value="hand">
+          <div className="space-y-2">
+            {yourHand.length === 0 ? (
+              <EmptyState text="No cards in hand" />
+            ) : (
+              yourHand.map((card) => (
+                <Card
+                  key={card.keyword}
+                  card={card}
+                  onClick={() => setSelectedCard(card)}
+                />
+              ))
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="played">
+          <div className="space-y-2">
+            {playedCards.length === 0 ? (
+              <EmptyState text="No cards played yet" />
+            ) : (
+              playedCards.map((card) => (
+                <Card
+                  key={card.keyword}
+                  card={card}
+                  onClick={() => setSelectedCard(card)}
+                />
+              ))
+            )}
+          </div>
+        </TabsContent>
+      </Tabs>
 
       {/* Card info modal */}
       {selectedCard && (

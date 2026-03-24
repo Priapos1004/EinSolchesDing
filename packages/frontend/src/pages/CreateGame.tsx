@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createGame } from "../api/http";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Copy, Check, Plus, Minus, Gamepad2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function CreateGame() {
   const [playerCount, setPlayerCount] = useState(2);
@@ -8,6 +12,7 @@ export default function CreateGame() {
   const [inviteUrl, setInviteUrl] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
 
   const token = localStorage.getItem("adminToken");
@@ -21,9 +26,9 @@ export default function CreateGame() {
     setLoading(true);
     try {
       const result = await createGame(token, playerCount, language);
-      // Build a proper invite URL using the current browser origin
       const url = `${window.location.origin}/join/${result.game_id}?token=${result.invite_token}`;
       setInviteUrl(url);
+      toast.success("Game created successfully!");
     } catch (err: any) {
       setError(err.message || "Failed to create game");
     } finally {
@@ -33,101 +38,111 @@ export default function CreateGame() {
 
   const copyLink = () => {
     navigator.clipboard.writeText(inviteUrl);
+    setCopied(true);
+    toast.success("Link copied to clipboard!");
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md space-y-6">
-        <h1 className="text-2xl font-bold text-center">Create Game</h1>
+    <div className="flex items-center justify-center min-h-screen p-4">
+      <div className="bg-card border border-border p-8 rounded-xl shadow-2xl w-full max-w-md space-y-6 animate-fade-in-up">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold tracking-tight">Create Game</h1>
+        </div>
 
         {error && (
-          <div className="bg-red-900/50 text-red-300 p-3 rounded text-sm">
+          <div className="bg-destructive/15 text-destructive border border-destructive/30 p-3 rounded-lg text-sm animate-fade-in">
             {error}
           </div>
         )}
 
         {!inviteUrl ? (
-          <>
+          <div className="space-y-6">
             {/* Player count */}
             <div className="space-y-2">
-              <label className="text-gray-400 text-sm">Players</label>
+              <label className="text-muted-foreground text-sm font-medium">Players</label>
               <div className="flex items-center gap-4">
-                <button
+                <Button
+                  variant="secondary"
+                  size="icon"
                   onClick={() => setPlayerCount(Math.max(2, playerCount - 1))}
-                  className="w-10 h-10 bg-gray-700 rounded text-xl hover:bg-gray-600 transition"
                   disabled={playerCount <= 2}
                 >
-                  -
-                </button>
-                <span className="text-2xl font-bold w-8 text-center">
+                  <Minus className="h-4 w-4" />
+                </Button>
+                <span className="text-3xl font-bold w-10 text-center tabular-nums">
                   {playerCount}
                 </span>
-                <button
+                <Button
+                  variant="secondary"
+                  size="icon"
                   onClick={() => setPlayerCount(Math.min(5, playerCount + 1))}
-                  className="w-10 h-10 bg-gray-700 rounded text-xl hover:bg-gray-600 transition"
                   disabled={playerCount >= 5}
                 >
-                  +
-                </button>
+                  <Plus className="h-4 w-4" />
+                </Button>
               </div>
             </div>
 
             {/* Language */}
             <div className="space-y-2">
-              <label className="text-gray-400 text-sm">Language</label>
+              <label className="text-muted-foreground text-sm font-medium">Language</label>
               <div className="flex gap-2">
-                <button
+                <Button
                   onClick={() => setLanguage("de")}
-                  className={`flex-1 p-3 rounded font-semibold transition ${
-                    language === "de"
-                      ? "bg-amber-600"
-                      : "bg-gray-700 hover:bg-gray-600"
-                  }`}
+                  variant={language === "de" ? "default" : "secondary"}
+                  className="flex-1"
                 >
                   Deutsch
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => setLanguage("en")}
-                  className={`flex-1 p-3 rounded font-semibold transition ${
-                    language === "en"
-                      ? "bg-amber-600"
-                      : "bg-gray-700 hover:bg-gray-600"
-                  }`}
+                  variant={language === "en" ? "default" : "secondary"}
+                  className="flex-1"
                 >
                   English
-                </button>
+                </Button>
               </div>
             </div>
 
-            <button
+            <Button
               onClick={handleCreate}
               disabled={loading}
-              className="w-full p-3 bg-green-600 hover:bg-green-700 rounded font-semibold disabled:opacity-50 transition"
+              variant="success"
+              className="w-full"
+              size="lg"
             >
+              <Gamepad2 className="h-5 w-5" />
               {loading ? "Creating..." : "Create Game"}
-            </button>
-          </>
+            </Button>
+          </div>
         ) : (
-          <div className="space-y-4">
-            <p className="text-green-400 text-center">Game created!</p>
-            <p className="text-gray-400 text-sm text-center">
+          <div className="space-y-4 animate-fade-in-up">
+            <div className="flex items-center justify-center">
+              <Badge variant="success" className="text-sm px-3 py-1">
+                Game created!
+              </Badge>
+            </div>
+            <p className="text-muted-foreground text-sm text-center">
               Share this link with {playerCount} players:
             </p>
-            <div className="bg-gray-700 p-3 rounded text-sm break-all select-all">
+            <div className="bg-secondary/50 border border-border p-3 rounded-lg text-sm break-all select-all font-mono">
               {inviteUrl}
             </div>
-            <button
-              onClick={copyLink}
-              className="w-full p-3 bg-amber-600 hover:bg-amber-700 rounded font-semibold transition"
-            >
-              Copy Link
-            </button>
-            <button
-              onClick={() => setInviteUrl("")}
-              className="w-full p-3 bg-gray-700 hover:bg-gray-600 rounded font-semibold transition"
+            <Button onClick={copyLink} className="w-full">
+              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              {copied ? "Copied!" : "Copy Link"}
+            </Button>
+            <Button
+              onClick={() => {
+                setInviteUrl("");
+                setCopied(false);
+              }}
+              variant="secondary"
+              className="w-full"
             >
               Create Another Game
-            </button>
+            </Button>
           </div>
         )}
       </div>

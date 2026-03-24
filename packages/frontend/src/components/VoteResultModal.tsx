@@ -1,4 +1,13 @@
 import { useGameStore, usePlayerName } from "../store/gameStore";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { CheckCircle2, XCircle } from "lucide-react";
 
 export default function VoteResultModal() {
   const { voteResult, clearVoteResult, yourIndex } = useGameStore();
@@ -10,11 +19,11 @@ export default function VoteResultModal() {
   const isTarget = yourIndex === voteResult.target;
   const drewCards = yourIndex === voteResult.cards_drawn_by;
 
-  const { icon, title, color, message } = voteResult.valid
+  const { Icon, iconColor, title, message } = voteResult.valid
     ? {
-        icon: "\u2714",
+        Icon: CheckCircle2,
+        iconColor: "text-success",
         title: "Answer was valid!",
-        color: "text-green-400",
         message: isTarget
           ? `Your answer was accepted. ${drawnByName} draws 2 cards.`
           : drewCards
@@ -22,9 +31,9 @@ export default function VoteResultModal() {
             : `${targetName}'s answer was valid. ${drawnByName} draws 2 cards.`,
       }
     : {
-        icon: "\u2718",
+        Icon: XCircle,
+        iconColor: "text-destructive",
         title: "Answer was invalid!",
-        color: "text-red-400",
         message: isTarget
           ? "Your answer was rejected. You draw 2 cards."
           : drewCards
@@ -33,19 +42,22 @@ export default function VoteResultModal() {
       };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-800 rounded-xl p-6 max-w-sm w-full space-y-4 text-center">
-        <div className="text-4xl">{icon}</div>
-        <h2 className={`text-lg font-bold ${color}`}>{title}</h2>
-        <p className="text-gray-300">{message}</p>
+    <Dialog open>
+      <DialogContent hideClose className="text-center">
+        <DialogHeader className="items-center">
+          <div className="animate-scale-in">
+            <Icon className={`h-12 w-12 ${iconColor}`} />
+          </div>
+          <DialogTitle className={`text-lg ${iconColor}`}>{title}</DialogTitle>
+          <DialogDescription className="text-foreground/70 text-sm">
+            {message}
+          </DialogDescription>
+        </DialogHeader>
 
-        <button
-          onClick={clearVoteResult}
-          className="w-full p-3 bg-amber-600 hover:bg-amber-700 rounded font-semibold transition"
-        >
+        <Button onClick={clearVoteResult} className="w-full mt-2">
           OK
-        </button>
-      </div>
-    </div>
+        </Button>
+      </DialogContent>
+    </Dialog>
   );
 }

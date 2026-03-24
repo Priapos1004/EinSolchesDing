@@ -12,7 +12,8 @@
       "Bash(docker --version)",
       "Bash(./node_modules/.bin/tsc --noEmit -p packages/frontend/tsconfig.app.json)",
       "Bash(bunx tsc:*)",
-      "Bash(grep -n \"console.error\\\\|console.log\" /Users/samuelbrinkmann/Documents/GitHub/EinSolchesDing/packages/backend/src/*.ts /Users/samuelbrinkmann/Documents/GitHub/EinSolchesDing/packages/frontend/src/**/*.ts*)"
+      "Bash(grep -n \"console.error\\\\|console.log\" /Users/samuelbrinkmann/Documents/GitHub/EinSolchesDing/packages/backend/src/*.ts /Users/samuelbrinkmann/Documents/GitHub/EinSolchesDing/packages/frontend/src/**/*.ts*)",
+      "Bash(bun add:*)"
     ]
   }
 }

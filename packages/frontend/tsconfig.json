@@ -15,8 +15,10 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
     "paths": {
-      "@esd/shared": ["../shared/src/types"]
+      "@esd/shared": ["../shared/src/types"],
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"]

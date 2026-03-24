@@ -1,4 +1,6 @@
 import type { Card as CardType } from "@esd/shared";
+import { cn } from "@/lib/utils";
+import { ChevronRight } from "lucide-react";
 
 interface Props {
   card: CardType;
@@ -9,9 +11,16 @@ export default function Card({ card, onClick }: Props) {
   return (
     <button
       onClick={onClick}
-      className="w-full p-4 bg-gray-800 hover:bg-gray-750 border border-gray-700 hover:border-amber-600 rounded-lg text-left transition"
+      className={cn(
+        "w-full p-4 bg-card border border-border rounded-lg text-left transition-all duration-200",
+        "hover:border-primary/60 hover:bg-card/80 hover:shadow-md hover:shadow-primary/5",
+        "active:scale-[0.99] group"
+      )}
     >
-      <span className="font-semibold text-amber-400">{card.keyword}</span>
+      <div className="flex items-center justify-between">
+        <span className="font-semibold text-primary">{card.keyword}</span>
+        <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+      </div>
     </button>
   );
 }

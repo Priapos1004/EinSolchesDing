@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useGameStore, useIsMyTurn } from "../store/gameStore";
 import { startVote, getSessionToken } from "../api/http";
+import { Button } from "@/components/ui/button";
+import { ShieldAlert, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface Props {
   gameId: string;
@@ -9,7 +12,6 @@ interface Props {
 export default function ActionBar({ gameId }: Props) {
   const { playedCards, activeVote } = useGameStore();
   const isMyTurn = useIsMyTurn();
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const canChallenge = playedCards.length > 0 && !activeVote && isMyTurn;
@@ -19,31 +21,32 @@ export default function ActionBar({ gameId }: Props) {
     if (!sessionToken) return;
 
     setLoading(true);
-    setError("");
     try {
       await startVote(gameId, sessionToken);
     } catch (err: any) {
-      setError(err.message || "Failed to start vote");
+      toast.error(err.message || "Failed to start vote");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700 p-4">
+    <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border p-4 animate-slide-up">
       <div className="max-w-lg mx-auto">
-        {error && (
-          <div className="bg-red-900/50 text-red-300 p-2 rounded text-sm mb-2">
-            {error}
-          </div>
-        )}
-        <button
+        <Button
           onClick={handleChallenge}
           disabled={!canChallenge || loading}
-          className="w-full p-3 bg-red-600 hover:bg-red-700 rounded font-semibold disabled:opacity-50 transition"
+          variant="destructive"
+          size="lg"
+          className="w-full"
         >
+          {loading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <ShieldAlert className="h-4 w-4" />
+          )}
           {loading ? "Starting vote..." : "Challenge (Was the answer valid?)"}
-        </button>
+        </Button>
       </div>
     </div>
   );

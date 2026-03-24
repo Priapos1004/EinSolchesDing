@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { adminLogin } from "../api/http";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { LogIn } from "lucide-react";
 
 export default function AdminLogin() {
   const [username, setUsername] = useState("");
@@ -25,43 +28,43 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen p-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-sm space-y-4"
+        className="bg-card border border-border p-8 rounded-xl shadow-2xl w-full max-w-sm space-y-5 animate-fade-in-up"
       >
-        <h1 className="text-2xl font-bold text-center">EinSolchesDing</h1>
-        <p className="text-gray-400 text-center text-sm">Admin Login</p>
+        <div className="text-center space-y-1">
+          <h1 className="text-2xl font-bold tracking-tight">EinSolchesDing</h1>
+          <p className="text-muted-foreground text-sm">Admin Login</p>
+        </div>
 
         {error && (
-          <div className="bg-red-900/50 text-red-300 p-3 rounded text-sm">
+          <div className="bg-destructive/15 text-destructive border border-destructive/30 p-3 rounded-lg text-sm animate-fade-in">
             {error}
           </div>
         )}
 
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="w-full p-3 bg-gray-700 rounded border border-gray-600 focus:border-amber-500 focus:outline-none"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-3 bg-gray-700 rounded border border-gray-600 focus:border-amber-500 focus:outline-none"
-          required
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full p-3 bg-amber-600 hover:bg-amber-700 rounded font-semibold disabled:opacity-50 transition"
-        >
+        <div className="space-y-3">
+          <Input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+          <Input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <Button type="submit" disabled={loading} className="w-full">
+          <LogIn className="h-4 w-4" />
           {loading ? "Logging in..." : "Login"}
-        </button>
+        </Button>
       </form>
     </div>
   );
