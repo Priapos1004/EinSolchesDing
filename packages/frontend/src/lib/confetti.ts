@@ -42,12 +42,18 @@ export function fireConfetti(): () => void {
   return fireConfettiLoop({ particleCount: 3, colors: WINNER_COLORS });
 }
 
-const LOSER_SCALAR = 2;
+const LOSER_SCALAR = 4;
 const LOSER_SHAPES = [
   confetti.shapeFromText({ text: "💩", scalar: LOSER_SCALAR }),
   confetti.shapeFromText({ text: "🐟", scalar: LOSER_SCALAR }),
 ];
 
 export function fireLoserConfetti(): () => void {
-  return fireConfettiLoop({ particleCount: 2, shapes: LOSER_SHAPES, scalar: LOSER_SCALAR });
+  return fireConfettiLoop({
+    particleCount: 1,
+    shapes: LOSER_SHAPES,
+    scalar: LOSER_SCALAR,
+    gravity: 0.6,
+    ticks: 300,
+  });
 }

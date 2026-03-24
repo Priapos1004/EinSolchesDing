@@ -209,6 +209,7 @@ export async function handleVoteStart(
     initiator: vote.initiator,
     target: vote.target,
     target_name: vote.target_name,
+    votes_needed: vote.votes_needed,
   });
 
   return Response.json({ ok: true });

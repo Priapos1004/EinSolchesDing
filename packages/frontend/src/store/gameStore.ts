@@ -99,7 +99,7 @@ export const useGameStore = create<GameStore>((set) => ({
             target_name: event.target_name,
             votes_yes: [],
             votes_no: [],
-            votes_needed: 0,
+            votes_needed: event.votes_needed,
           },
         });
         break;

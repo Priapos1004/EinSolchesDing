@@ -62,6 +62,7 @@ export interface VoteStartedEvent {
   initiator: number;
   target: number;
   target_name: string;
+  votes_needed: number;
 }
 
 export interface VoteUpdateEvent {
