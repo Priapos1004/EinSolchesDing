@@ -1,11 +1,11 @@
-import confetti, { type Options, shapeFromText } from "canvas-confetti";
+import confetti from "canvas-confetti";
 
 const SIDES = [
   { angle: 60, origin: { x: 0 } },
   { angle: 120, origin: { x: 1 } },
 ] as const;
 
-function fireConfettiLoop(options: Omit<Options, "angle" | "origin" | "spread">): () => void {
+function fireConfettiLoop(options: Omit<confetti.Options, "angle" | "origin" | "spread">): () => void {
   const duration = 3000;
   const end = Date.now() + duration;
   let rafId: number;
@@ -44,8 +44,8 @@ export function fireConfetti(): () => void {
 
 const LOSER_SCALAR = 2;
 const LOSER_SHAPES = [
-  shapeFromText({ text: "💩", scalar: LOSER_SCALAR }),
-  shapeFromText({ text: "🐟", scalar: LOSER_SCALAR }),
+  confetti.shapeFromText({ text: "💩", scalar: LOSER_SCALAR }),
+  confetti.shapeFromText({ text: "🐟", scalar: LOSER_SCALAR }),
 ];
 
 export function fireLoserConfetti(): () => void {
