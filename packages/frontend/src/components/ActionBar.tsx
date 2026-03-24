@@ -14,7 +14,7 @@ export default function ActionBar({ gameId }: Props) {
   const canChallenge = playedCards.length > 0 && !activeVote;
 
   const handleChallenge = async () => {
-    const sessionToken = localStorage.getItem(`session_${gameId}`);
+    const sessionToken = sessionStorage.getItem(`session_${gameId}`);
     if (!sessionToken) return;
 
     setLoading(true);

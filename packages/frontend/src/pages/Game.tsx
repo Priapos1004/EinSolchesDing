@@ -17,7 +17,7 @@ export default function Game() {
   useEffect(() => {
     if (!gameId) return;
 
-    const sessionToken = localStorage.getItem(`session_${gameId}`);
+    const sessionToken = sessionStorage.getItem(`session_${gameId}`);
     if (!sessionToken) {
       navigate(`/join/${gameId}`);
       return;

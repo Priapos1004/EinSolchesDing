@@ -19,7 +19,7 @@ export default function CardInfoModal({
   const [loading, setLoading] = useState(false);
 
   const handlePlay = async () => {
-    const sessionToken = localStorage.getItem(`session_${gameId}`);
+    const sessionToken = sessionStorage.getItem(`session_${gameId}`);
     if (!sessionToken) return;
 
     setLoading(true);

@@ -43,8 +43,7 @@ export default function JoinGame() {
     setError("");
     try {
       const result = await joinGame(gameId, inviteToken, displayName.trim());
-      localStorage.setItem(`session_${gameId}`, result.session_token);
-      localStorage.setItem(`playerIndex_${gameId}`, String(result.player_index));
+      sessionStorage.setItem(`session_${gameId}`, result.session_token);
       navigate(`/game/${gameId}`);
     } catch (err: any) {
       setError(err.message || "Failed to join");
