@@ -16,12 +16,8 @@ RUN bun install
 COPY packages/frontend/ packages/frontend/
 COPY packages/shared/ packages/shared/
 
-# Build — log full error on failure
-RUN cd packages/frontend && node -e " \
-  import('vite').then(v => v.build()).catch(e => { \
-    console.error('BUILD ERROR:', e); \
-    process.exit(1); \
-  })"
+# Build
+RUN cd packages/frontend && bun run build
 
 # Serve with nginx
 FROM nginx:alpine
