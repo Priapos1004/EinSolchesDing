@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useGameStore } from "../store/gameStore";
+import { useGameStore, usePlayerName } from "../store/gameStore";
 import { castVote, getSessionToken } from "../api/http";
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
 
 export default function VoteModal({ gameId }: Props) {
   const { activeVote, yourIndex } = useGameStore();
+  const initiatorName = usePlayerName(activeVote?.initiator);
   const [voted, setVoted] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -54,7 +55,7 @@ export default function VoteModal({ gameId }: Props) {
 
         {isTarget ? (
           <p className="text-gray-400">
-            You are being challenged. Waiting for votes...
+            {initiatorName} is challenging you. Waiting for votes...
           </p>
         ) : voted ? (
           <p className="text-gray-400">Vote cast. Waiting for others...</p>

@@ -13,7 +13,7 @@ import WinnerModal from "../components/WinnerModal";
 export default function Game() {
   const { gameId } = useParams<{ gameId: string }>();
   const navigate = useNavigate();
-  const { status, handleEvent, reset } = useGameStore();
+  const { status, handleEvent, reset, zeroCardsPlayer, yourIndex } = useGameStore();
   const isMyTurn = useIsMyTurn();
   const cleanupRef = useRef<(() => void) | null>(null);
 
@@ -53,7 +53,12 @@ export default function Game() {
   return (
     <div className="max-w-lg mx-auto p-4 pb-24 min-h-screen">
       <h1 className="text-xl font-bold text-center mb-4">EinSolchesDing</h1>
-      {isMyTurn && (
+      {zeroCardsPlayer && zeroCardsPlayer.player_index !== yourIndex && (
+        <div className="bg-red-600/20 border border-red-600 text-red-300 text-center py-2 rounded-lg mb-3 text-sm font-medium">
+          {zeroCardsPlayer.display_name} has no cards left. You have to challenge!
+        </div>
+      )}
+      {isMyTurn && !zeroCardsPlayer && (
         <div className="bg-amber-600/20 border border-amber-600 text-amber-300 text-center py-2 rounded-lg mb-3 text-sm font-medium animate-pulse">
           Your turn!
         </div>

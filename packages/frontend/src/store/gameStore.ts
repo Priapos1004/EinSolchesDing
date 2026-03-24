@@ -24,6 +24,7 @@ interface GameStore {
   playedCards: Card[];
   activeVote: VoteState | null;
   winner: { player_index: number; display_name: string } | null;
+  zeroCardsPlayer: { player_index: number; display_name: string } | null;
   voteResult: Omit<VoteResultEvent, "type"> | null;
 
   // Handle SSE events
@@ -50,6 +51,7 @@ export const useGameStore = create<GameStore>((set) => ({
   playedCards: [],
   activeVote: null,
   winner: null,
+  zeroCardsPlayer: null,
   voteResult: null,
 
   handleEvent: (event) => {
@@ -65,6 +67,8 @@ export const useGameStore = create<GameStore>((set) => ({
           yourHand: event.your_hand,
           playedCards: event.played_cards,
           activeVote: event.active_vote,
+          winner: event.winner ?? null,
+          zeroCardsPlayer: event.zero_cards_player ?? null,
           connected: true,
         });
         break;
@@ -146,9 +150,13 @@ export const useGameStore = create<GameStore>((set) => ({
       playedCards: [],
       activeVote: null,
       winner: null,
+      zeroCardsPlayer: null,
       voteResult: null,
     }),
 }));
 
 export const useIsMyTurn = () =>
   useGameStore((s) => s.status === "playing" && s.currentPlayer === s.yourIndex);
+
+export const usePlayerName = (index: number | undefined) =>
+  useGameStore((s) => s.players.find((p) => p.index === index)?.name ?? "?");

@@ -92,6 +92,9 @@ export async function broadcastGameState(
   const players = await gameManager.getPlayers(gameState.game_id);
   const vote = await gameManager.getVote(gameState.game_id);
 
+  const winnerPlayer = gameState.winner !== -1 ? players.get(gameState.winner) : null;
+  const zeroCardsPlayer = gameState.zero_cards_player !== -1 ? players.get(gameState.zero_cards_player) : null;
+
   for (const [playerIndex, conn] of gameConns) {
     const event: GameStateEvent = {
       type: "game_state",
@@ -109,6 +112,8 @@ export async function broadcastGameState(
       your_hand: gameState.player_hands[playerIndex] ?? [],
       played_cards: gameState.played_cards,
       active_vote: vote,
+      winner: winnerPlayer ? { player_index: gameState.winner, display_name: winnerPlayer.display_name } : null,
+      zero_cards_player: zeroCardsPlayer ? { player_index: gameState.zero_cards_player, display_name: zeroCardsPlayer.display_name } : null,
     };
     sendSSE(conn.controller, event);
   }

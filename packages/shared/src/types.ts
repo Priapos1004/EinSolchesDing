@@ -45,6 +45,8 @@ export interface GameStateEvent {
   your_hand: Card[];
   played_cards: Card[];
   active_vote: VoteState | null;
+  winner: { player_index: number; display_name: string } | null;
+  zero_cards_player: { player_index: number; display_name: string } | null;
 }
 
 // SSE events server → client

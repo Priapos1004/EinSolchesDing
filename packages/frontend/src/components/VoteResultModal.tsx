@@ -1,14 +1,14 @@
-import { useGameStore } from "../store/gameStore";
+import { useGameStore, usePlayerName } from "../store/gameStore";
 
 export default function VoteResultModal() {
-  const { voteResult, clearVoteResult, yourIndex, players } = useGameStore();
+  const { voteResult, clearVoteResult, yourIndex } = useGameStore();
+  const targetName = usePlayerName(voteResult?.target);
+  const drawnByName = usePlayerName(voteResult?.cards_drawn_by);
 
   if (!voteResult) return null;
 
   const isTarget = yourIndex === voteResult.target;
   const drewCards = yourIndex === voteResult.cards_drawn_by;
-  const getPlayerName = (index: number) =>
-    players.find((p) => p.index === index)?.name ?? "?";
 
   const { icon, title, color, message } = voteResult.valid
     ? {
@@ -16,10 +16,10 @@ export default function VoteResultModal() {
         title: "Answer was valid!",
         color: "text-green-400",
         message: isTarget
-          ? "Your answer was accepted. The challenger draws 2 cards."
+          ? `Your answer was accepted. ${drawnByName} draws 2 cards.`
           : drewCards
-            ? "The answer was valid. You draw 2 cards."
-            : `${getPlayerName(voteResult.target)}'s answer was valid. ${getPlayerName(voteResult.cards_drawn_by)} draws 2 cards.`,
+            ? `${targetName}'s answer was valid. You draw 2 cards.`
+            : `${targetName}'s answer was valid. ${drawnByName} draws 2 cards.`,
       }
     : {
         icon: "\u2718",
@@ -28,8 +28,8 @@ export default function VoteResultModal() {
         message: isTarget
           ? "Your answer was rejected. You draw 2 cards."
           : drewCards
-            ? "The answer was invalid. You draw 2 cards."
-            : `${getPlayerName(voteResult.target)}'s answer was invalid. ${getPlayerName(voteResult.cards_drawn_by)} draws 2 cards.`,
+            ? `${targetName}'s answer was invalid. You draw 2 cards.`
+            : `${targetName}'s answer was invalid. ${drawnByName} draws 2 cards.`,
       };
 
   return (
