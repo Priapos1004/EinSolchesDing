@@ -47,13 +47,15 @@ export function removeConnection(gameId: string, playerIndex: number): void {
   }
 }
 
+const encoder = new TextEncoder();
+
 function sendSSE(
   controller: ReadableStreamDefaultController,
   event: SSEEvent
 ): void {
   try {
     const data = `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`;
-    controller.enqueue(new TextEncoder().encode(data));
+    controller.enqueue(encoder.encode(data));
   } catch {
     // Connection closed
   }

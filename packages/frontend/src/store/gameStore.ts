@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type {
   GameStateEvent,
+  GameStatus,
   VoteState,
   VoteResultEvent,
   PlayerInfo,
@@ -15,7 +16,7 @@ interface GameStore {
 
   // Game state from server
   gameId: string | null;
-  status: string;
+  status: GameStatus;
   language: string;
   currentPlayer: number;
   yourIndex: number;
@@ -164,3 +165,9 @@ export const useIsMyTurn = () =>
 
 export const usePlayerName = (index: number | undefined) =>
   useGameStore((s) => s.players.find((p) => p.index === index)?.name ?? "?");
+
+export const usePrevPlayerName = () =>
+  useGameStore((s) => {
+    const prevIndex = (s.currentPlayer - 1 + s.players.length) % s.players.length;
+    return s.players.find((p) => p.index === prevIndex)?.name ?? "?";
+  });

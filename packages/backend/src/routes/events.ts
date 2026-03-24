@@ -1,6 +1,31 @@
 import { verifySessionToken } from "../auth";
 import { gameManager } from "../game-manager";
-import { createSSEStream, removeConnection, broadcastGameState } from "../sse";
+import { createSSEStream, removeConnection, broadcastGameState, getConnectedPlayers } from "../sse";
+
+// Per-game TTL refresh interval (shared across all connections for that game)
+const gameIntervals = new Map<string, { interval: Timer; refCount: number }>();
+
+function acquireTTLRefresh(gameId: string): void {
+  const existing = gameIntervals.get(gameId);
+  if (existing) {
+    existing.refCount++;
+    return;
+  }
+  const interval = setInterval(() => {
+    gameManager.refreshTTL(gameId).catch(() => {});
+  }, 30 * 60 * 1000);
+  gameIntervals.set(gameId, { interval, refCount: 1 });
+}
+
+function releaseTTLRefresh(gameId: string): void {
+  const existing = gameIntervals.get(gameId);
+  if (!existing) return;
+  existing.refCount--;
+  if (existing.refCount <= 0) {
+    clearInterval(existing.interval);
+    gameIntervals.delete(gameId);
+  }
+}
 
 export async function handleSSE(
   req: Request,
@@ -26,17 +51,13 @@ export async function handleSSE(
   // Mark player as connected
   await gameManager.setPlayerConnected(gameId, session.player_index, true);
 
-  // Refresh TTL on connect
+  // Refresh TTL on connect and start per-game interval
   await gameManager.refreshTTL(gameId);
+  acquireTTLRefresh(gameId);
 
-  // Refresh TTL periodically (every 30 minutes) while connected
-  const interval = setInterval(() => {
-    gameManager.refreshTTL(gameId).catch(() => {});
-  }, 30 * 60 * 1000);
-
-  // Clean up interval when request is aborted (client disconnects)
+  // Clean up when client disconnects
   req.signal.addEventListener("abort", () => {
-    clearInterval(interval);
+    releaseTTLRefresh(gameId);
   });
 
   const stream = createSSEStream(gameId, session.player_index);

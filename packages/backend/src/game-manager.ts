@@ -210,15 +210,10 @@ export class GameManager {
     await redis.del(key(gameId, "vote"));
   }
 
-  // Refresh TTL on all keys for a game (call on SSE connect and periodically)
-  async refreshTTL(gameId: string): Promise<void> {
-    const metaKey = key(gameId, "meta");
-    const meta = await redis.hgetall(metaKey);
-    if (!meta || !meta.player_count) return;
-
-    const playerCount = parseInt(meta.player_count);
+  // Get all Redis keys for a game
+  private getAllKeys(gameId: string, playerCount: number): string[] {
     const keys = [
-      metaKey,
+      key(gameId, "meta"),
       key(gameId, "players"),
       key(gameId, "played"),
       key(gameId, "draw_stack"),
@@ -227,31 +222,25 @@ export class GameManager {
     for (let i = 0; i < playerCount; i++) {
       keys.push(key(gameId, "hand", String(i)));
     }
-    for (const k of keys) {
-      await redis.expire(k, TTL);
-    }
+    return keys;
+  }
+
+  // Refresh TTL on all keys for a game (call on SSE connect and periodically)
+  async refreshTTL(gameId: string): Promise<void> {
+    const meta = await redis.hgetall(key(gameId, "meta"));
+    if (!meta || !meta.player_count) return;
+
+    const keys = this.getAllKeys(gameId, parseInt(meta.player_count));
+    await Promise.all(keys.map((k) => redis.expire(k, TTL)));
   }
 
   // Delete entire game
   async deleteGame(gameId: string): Promise<void> {
-    const metaKey = key(gameId, "meta");
-    const meta = await redis.hgetall(metaKey);
+    const meta = await redis.hgetall(key(gameId, "meta"));
     if (!meta) return;
 
-    const playerCount = parseInt(meta.player_count || "0");
-    const keys = [
-      metaKey,
-      key(gameId, "players"),
-      key(gameId, "played"),
-      key(gameId, "draw_stack"),
-      key(gameId, "vote"),
-    ];
-    for (let i = 0; i < playerCount; i++) {
-      keys.push(key(gameId, "hand", String(i)));
-    }
-    for (const k of keys) {
-      await redis.del(k);
-    }
+    const keys = this.getAllKeys(gameId, parseInt(meta.player_count || "0"));
+    await Promise.all(keys.map((k) => redis.del(k)));
   }
 }
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useGameStore, useIsMyTurn } from "../store/gameStore";
+import { useGameStore, useIsMyTurn, usePrevPlayerName } from "../store/gameStore";
 import { connectSSE } from "../api/sse";
 import { getSessionToken, getInviteToken } from "../api/http";
 import PlayerTabs from "../components/PlayerTabs";
@@ -12,14 +12,21 @@ import WinnerModal from "../components/WinnerModal";
 import { Loader2, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+function WarningBanner({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-2 bg-destructive/15 border border-destructive/30 text-destructive py-2.5 px-4 rounded-lg mb-3 text-sm font-medium animate-fade-in">
+      <AlertTriangle className="h-4 w-4 shrink-0" />
+      {children}
+    </div>
+  );
+}
+
 export default function Game() {
   const { gameId } = useParams<{ gameId: string }>();
   const navigate = useNavigate();
-  const { status, handleEvent, reset, zeroCardsPlayer, yourIndex, playedCards, maxCards, players, currentPlayer, activeVote } = useGameStore();
+  const { status, zeroCardsPlayer, yourIndex, playedCards, maxCards, activeVote } = useGameStore();
   const isMyTurn = useIsMyTurn();
-
-  const prevPlayerIndex = (currentPlayer - 1 + players.length) % players.length;
-  const prevPlayerName = players.find((p) => p.index === prevPlayerIndex)?.name ?? "?";
+  const prevPlayerName = usePrevPlayerName();
   const maxCardsReached = playedCards.length >= maxCards && !activeVote && !zeroCardsPlayer;
   const cleanupRef = useRef<(() => void) | null>(null);
 
@@ -34,6 +41,7 @@ export default function Game() {
       return;
     }
 
+    const { handleEvent, reset } = useGameStore.getState();
     cleanupRef.current = connectSSE(gameId, sessionToken, handleEvent);
 
     return () => {
@@ -69,21 +77,19 @@ export default function Game() {
       <h1 className="text-xl font-bold text-center mb-4 tracking-tight">EinSolchesDing</h1>
 
       {zeroCardsPlayer && zeroCardsPlayer.player_index !== yourIndex && (
-        <div className="flex items-center gap-2 bg-destructive/15 border border-destructive/30 text-destructive py-2.5 px-4 rounded-lg mb-3 text-sm font-medium animate-fade-in">
-          <AlertTriangle className="h-4 w-4 shrink-0" />
+        <WarningBanner>
           {isMyTurn
             ? `You must challenge ${zeroCardsPlayer.display_name} as they have no more cards`
             : `${zeroCardsPlayer.display_name} has no more cards`}
-        </div>
+        </WarningBanner>
       )}
 
       {maxCardsReached && (
-        <div className="flex items-center gap-2 bg-destructive/15 border border-destructive/30 text-destructive py-2.5 px-4 rounded-lg mb-3 text-sm font-medium animate-fade-in">
-          <AlertTriangle className="h-4 w-4 shrink-0" />
+        <WarningBanner>
           {isMyTurn
             ? `You must challenge ${prevPlayerName} as ${maxCards} cards have been played`
             : `Maximum cards played (${maxCards}). Waiting for challenge...`}
-        </div>
+        </WarningBanner>
       )}
 
       <PlayerTabs />

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGameStore, useIsMyTurn } from "../store/gameStore";
+import { useGameStore, useIsMyTurn, usePrevPlayerName } from "../store/gameStore";
 import { startVote, getSessionToken } from "../api/http";
 import { Button } from "@/components/ui/button";
 import { ShieldAlert, Loader2 } from "lucide-react";
@@ -10,14 +10,12 @@ interface Props {
 }
 
 export default function ActionBar({ gameId }: Props) {
-  const { playedCards, activeVote, players, currentPlayer } = useGameStore();
+  const { playedCards, activeVote } = useGameStore();
   const isMyTurn = useIsMyTurn();
+  const prevPlayerName = usePrevPlayerName();
   const [loading, setLoading] = useState(false);
 
   const canChallenge = playedCards.length > 0 && !activeVote && isMyTurn;
-
-  const prevPlayerIndex = (currentPlayer - 1 + players.length) % players.length;
-  const prevPlayerName = players.find((p) => p.index === prevPlayerIndex)?.name ?? "?";
 
   const handleChallenge = async () => {
     const sessionToken = getSessionToken(gameId);

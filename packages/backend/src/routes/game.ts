@@ -55,11 +55,11 @@ export async function handleJoinGame(
     return Response.json({ error: "Game not found" }, { status: 404 });
   }
 
-  const currentPlayers = await gameManager.getPlayerCount(gameId);
+  const players = await gameManager.getPlayers(gameId);
+  const currentPlayers = players.size;
 
   // Check if this is a returning player (same display_name already in game)
   if (currentPlayers >= state.player_count) {
-    const players = await gameManager.getPlayers(gameId);
     let existingIndex: number | null = null;
     for (const [idx, p] of players) {
       if (p.display_name === body.display_name) {
