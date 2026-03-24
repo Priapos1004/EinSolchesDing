@@ -2,15 +2,15 @@ FROM oven/bun:1 AS build
 WORKDIR /app
 
 # Copy workspace root
-COPY package.json bun.lock ./
+COPY package.json ./
 
-# Copy package.json for workspaces
+# Copy package.json for all workspaces (bun requires all to be present)
 COPY packages/frontend/package.json packages/frontend/
 COPY packages/shared/package.json packages/shared/
 COPY packages/backend/package.json packages/backend/
 
 # Install dependencies
-RUN bun install --frozen-lockfile
+RUN bun install
 
 # Copy source code
 COPY packages/frontend/ packages/frontend/
