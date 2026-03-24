@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Card } from "@esd/shared";
-import { playCardAction } from "../api/http";
+import { playCardAction, getSessionToken } from "../api/http";
 
 interface Props {
   card: Card;
@@ -19,7 +19,7 @@ export default function CardInfoModal({
   const [loading, setLoading] = useState(false);
 
   const handlePlay = async () => {
-    const sessionToken = sessionStorage.getItem(`session_${gameId}`);
+    const sessionToken = getSessionToken(gameId);
     if (!sessionToken) return;
 
     setLoading(true);

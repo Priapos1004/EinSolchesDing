@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useGameStore } from "../store/gameStore";
-import { startVote } from "../api/http";
+import { startVote, getSessionToken } from "../api/http";
 
 interface Props {
   gameId: string;
@@ -14,7 +14,7 @@ export default function ActionBar({ gameId }: Props) {
   const canChallenge = playedCards.length > 0 && !activeVote;
 
   const handleChallenge = async () => {
-    const sessionToken = sessionStorage.getItem(`session_${gameId}`);
+    const sessionToken = getSessionToken(gameId);
     if (!sessionToken) return;
 
     setLoading(true);

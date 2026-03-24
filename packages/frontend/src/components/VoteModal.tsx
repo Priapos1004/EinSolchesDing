@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useGameStore } from "../store/gameStore";
-import { castVote } from "../api/http";
+import { castVote, getSessionToken } from "../api/http";
 
 interface Props {
   gameId: string;
@@ -25,7 +25,7 @@ export default function VoteModal({ gameId }: Props) {
   const noCount = activeVote.votes_no.length;
 
   const handleVote = async (valid: boolean) => {
-    const sessionToken = sessionStorage.getItem(`session_${gameId}`);
+    const sessionToken = getSessionToken(gameId);
     if (!sessionToken) return;
 
     setLoading(true);

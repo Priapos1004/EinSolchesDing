@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import { getGameInfo, joinGame } from "../api/http";
+import { getGameInfo, joinGame, setSessionToken } from "../api/http";
 
 export default function JoinGame() {
   const { gameId } = useParams<{ gameId: string }>();
@@ -43,7 +43,7 @@ export default function JoinGame() {
     setError("");
     try {
       const result = await joinGame(gameId, inviteToken, displayName.trim());
-      sessionStorage.setItem(`session_${gameId}`, result.session_token);
+      setSessionToken(gameId, result.session_token);
       navigate(`/game/${gameId}`);
     } catch (err: any) {
       setError(err.message || "Failed to join");

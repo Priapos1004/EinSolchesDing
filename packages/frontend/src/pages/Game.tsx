@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGameStore } from "../store/gameStore";
 import { connectSSE } from "../api/sse";
+import { getSessionToken } from "../api/http";
 import PlayerTabs from "../components/PlayerTabs";
 import CardList from "../components/CardList";
 import ActionBar from "../components/ActionBar";
@@ -17,7 +18,7 @@ export default function Game() {
   useEffect(() => {
     if (!gameId) return;
 
-    const sessionToken = sessionStorage.getItem(`session_${gameId}`);
+    const sessionToken = getSessionToken(gameId);
     if (!sessionToken) {
       navigate(`/join/${gameId}`);
       return;

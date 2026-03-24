@@ -22,6 +22,14 @@ function authHeaders(token: string): Record<string, string> {
   return { Authorization: `Bearer ${token}` };
 }
 
+export function getSessionToken(gameId: string): string | null {
+  return sessionStorage.getItem(`session_${gameId}`);
+}
+
+export function setSessionToken(gameId: string, token: string): void {
+  sessionStorage.setItem(`session_${gameId}`, token);
+}
+
 // Admin endpoints
 export async function adminLogin(username: string, password: string) {
   return request<{ token: string }>("/admin/login", {
