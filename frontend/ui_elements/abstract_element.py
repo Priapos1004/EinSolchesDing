@@ -11,7 +11,7 @@ class AbstractElement:
     line_spacing: int = -2
 
     # Can be adjusted to change the font type
-    font_type: str = "comicsans"
+    font_type: str = "arial"
 
     def __init__(self, x: int, y: int, width: int, height: int, outline_width: int, text: str, font_size: int, text_margin: int, bg_color: str | None, disabled_bg_color: str | None, selected_bg_color: str | None, outline_color: str | None, disabled_outline_color: str | None, hover_color: str | None, text_color: str, selected_text_color: str | None):
         self._x = x

@@ -15,7 +15,7 @@ class PopUp:
     button_outline_space = 15
     outline_color = "white"
     outline_thickness = 4
-    font_type = "comicsans"
+    font_type = "arial"
     font_size = 20
     text_color = "white"
 
