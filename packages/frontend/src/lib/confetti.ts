@@ -10,8 +10,11 @@ export function fireConfetti(): () => void {
   const duration = 3000;
   const end = Date.now() + duration;
   let rafId: number;
+  let cancelled = false;
 
   const frame = () => {
+    if (cancelled) return;
+
     for (const side of SIDES) {
       confetti({
         particleCount: 3,
@@ -29,5 +32,8 @@ export function fireConfetti(): () => void {
 
   rafId = requestAnimationFrame(frame);
 
-  return () => cancelAnimationFrame(rafId);
+  return () => {
+    cancelled = true;
+    cancelAnimationFrame(rafId);
+  };
 }
