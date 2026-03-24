@@ -1,9 +1,4 @@
-import type {
-  JoinGameRequest,
-  PlayCardRequest,
-  CastVoteRequest,
-  VoteState,
-} from "@esd/shared";
+import type { VoteState } from "@esd/shared";
 import { createSessionToken, verifySessionToken } from "../auth";
 import { gameManager } from "../game-manager";
 import { playCard, drawTwoCards } from "../game-logic";
@@ -11,6 +6,7 @@ import {
   broadcast,
   broadcastGameState,
 } from "../sse";
+import { joinGameSchema, playCardSchema, castVoteSchema, parseBody } from "../validation";
 
 export async function handleGameInfo(
   req: Request,
@@ -46,7 +42,8 @@ export async function handleJoinGame(
   req: Request,
   gameId: string
 ): Promise<Response> {
-  const body = (await req.json()) as JoinGameRequest;
+  const body = await parseBody(req, joinGameSchema);
+  if (body instanceof Response) return body;
 
   const storedToken = await gameManager.getInviteToken(gameId);
   if (!storedToken || body.token !== storedToken) {
@@ -59,7 +56,32 @@ export async function handleJoinGame(
   }
 
   const currentPlayers = await gameManager.getPlayerCount(gameId);
+
+  // Check if this is a returning player (same display_name already in game)
   if (currentPlayers >= state.player_count) {
+    const players = await gameManager.getPlayers(gameId);
+    let existingIndex: number | null = null;
+    for (const [idx, p] of players) {
+      if (p.display_name === body.display_name) {
+        existingIndex = idx;
+        break;
+      }
+    }
+
+    if (existingIndex !== null) {
+      // Returning player — reissue session token
+      const sessionToken = await createSessionToken(
+        gameId,
+        existingIndex,
+        body.display_name
+      );
+      return Response.json({
+        player_id: `${gameId}-${existingIndex}`,
+        player_index: existingIndex,
+        session_token: sessionToken,
+      });
+    }
+
     return Response.json({ error: "Game is full" }, { status: 400 });
   }
 
@@ -109,7 +131,9 @@ export async function handlePlayCard(
     return Response.json({ error: "Wrong game" }, { status: 403 });
   }
 
-  const body = (await req.json()) as PlayCardRequest;
+  const body = await parseBody(req, playCardSchema);
+  if (body instanceof Response) return body;
+
   const state = await gameManager.loadGameState(gameId);
   if (!state) {
     return Response.json({ error: "Game not found" }, { status: 404 });
@@ -198,7 +222,9 @@ export async function handleVoteCast(
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = (await req.json()) as CastVoteRequest;
+  const body = await parseBody(req, castVoteSchema);
+  if (body instanceof Response) return body;
+
   const vote = await gameManager.getVote(gameId);
   if (!vote) {
     return Response.json({ error: "No active vote" }, { status: 400 });

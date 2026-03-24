@@ -52,7 +52,7 @@ export default function CardInfoModal({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex gap-3 pt-2">
+        <div className="flex gap-3 pt-4">
           {canPlay && (
             <Button
               onClick={handlePlay}
@@ -61,9 +61,9 @@ export default function CardInfoModal({
               className="flex-1"
             >
               {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
               ) : (
-                <Play className="h-4 w-4" />
+                <Play className="h-4 w-4 shrink-0" />
               )}
               {loading ? "Playing..." : "Play Card"}
             </Button>

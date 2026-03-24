@@ -1,4 +1,3 @@
-import type { AdminLoginRequest, CreateGameRequest } from "@esd/shared";
 import {
   validateAdminCredentials,
   createAdminToken,
@@ -8,6 +7,7 @@ import {
 import { loadCards } from "../card-loader";
 import { createGameState } from "../game-logic";
 import { gameManager } from "../game-manager";
+import { adminLoginSchema, createGameSchema, parseBody } from "../validation";
 
 const cards = loadCards();
 
@@ -16,7 +16,8 @@ function gameId(): string {
 }
 
 export async function handleAdminLogin(req: Request): Promise<Response> {
-  const body = (await req.json()) as AdminLoginRequest;
+  const body = await parseBody(req, adminLoginSchema);
+  if (body instanceof Response) return body;
 
   if (!validateAdminCredentials(body.username, body.password)) {
     return Response.json({ error: "Invalid credentials" }, { status: 401 });
@@ -37,19 +38,8 @@ export async function handleCreateGame(req: Request): Promise<Response> {
     return Response.json({ error: "Invalid token" }, { status: 401 });
   }
 
-  const body = (await req.json()) as CreateGameRequest;
-  if (body.player_count < 2 || body.player_count > 5) {
-    return Response.json(
-      { error: "Player count must be 2-5" },
-      { status: 400 }
-    );
-  }
-  if (body.language !== "de" && body.language !== "en") {
-    return Response.json(
-      { error: "Language must be 'de' or 'en'" },
-      { status: 400 }
-    );
-  }
+  const body = await parseBody(req, createGameSchema);
+  if (body instanceof Response) return body;
 
   const id = gameId();
   const inviteToken = generateInviteToken();

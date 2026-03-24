@@ -32,7 +32,7 @@ export default function PlayerTabs() {
                 {p.card_count}
               </Badge>
               {!p.connected && (
-                <WifiOff className="h-3 w-3 text-destructive ml-0.5" />
+                <WifiOff className="h-3 w-3 shrink-0 text-destructive ml-0.5" />
               )}
             </div>
             {isYou && (

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createGame } from "../api/http";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Check, Plus, Minus, Gamepad2 } from "lucide-react";
+import { Copy, Check, Plus, Minus, Gamepad2, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 
 export default function CreateGame() {
@@ -45,7 +45,7 @@ export default function CreateGame() {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
-      <div className="bg-card border border-border p-8 rounded-xl shadow-2xl w-full max-w-md space-y-6 animate-fade-in-up">
+      <div className="bg-card border border-border p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-[calc(100vw-2rem)] sm:max-w-md space-y-6 animate-fade-in-up">
         <div className="text-center">
           <h1 className="text-2xl font-bold tracking-tight">Create Game</h1>
         </div>
@@ -60,8 +60,8 @@ export default function CreateGame() {
           <div className="space-y-6">
             {/* Player count */}
             <div className="space-y-2">
-              <label className="text-muted-foreground text-sm font-medium">Players</label>
-              <div className="flex items-center gap-4">
+              <label className="text-muted-foreground text-sm font-medium text-center block">Players</label>
+              <div className="flex items-center justify-center gap-4">
                 <Button
                   variant="secondary"
                   size="icon"
@@ -86,7 +86,7 @@ export default function CreateGame() {
 
             {/* Language */}
             <div className="space-y-2">
-              <label className="text-muted-foreground text-sm font-medium">Language</label>
+              <label className="text-muted-foreground text-sm font-medium text-center block">Language</label>
               <div className="flex gap-2">
                 <Button
                   onClick={() => setLanguage("de")}
@@ -129,10 +129,20 @@ export default function CreateGame() {
             <div className="bg-secondary/50 border border-border p-3 rounded-lg text-sm break-all select-all font-mono">
               {inviteUrl}
             </div>
-            <Button onClick={copyLink} className="w-full">
-              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-              {copied ? "Copied!" : "Copy Link"}
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={copyLink} className="flex-1">
+                {copied ? <Check className="h-4 w-4 shrink-0" /> : <Copy className="h-4 w-4 shrink-0" />}
+                {copied ? "Copied!" : "Copy Link"}
+              </Button>
+              <Button
+                onClick={() => window.open(inviteUrl, "_blank")}
+                variant="secondary"
+                className="flex-1"
+              >
+                <ExternalLink className="h-4 w-4 shrink-0" />
+                Open Link
+              </Button>
+            </div>
             <Button
               onClick={() => {
                 setInviteUrl("");

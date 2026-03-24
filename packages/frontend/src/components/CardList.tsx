@@ -39,11 +39,11 @@ export default function CardList({ gameId }: Props) {
       <Tabs value={view} onValueChange={(v) => setView(v as "hand" | "played")}>
         <TabsList>
           <TabsTrigger value="hand">
-            <Hand className="h-4 w-4 mr-1.5" />
+            <Hand className="h-4 w-4 shrink-0 mr-1.5" />
             Your Hand ({yourHand.length})
           </TabsTrigger>
           <TabsTrigger value="played">
-            <Layers className="h-4 w-4 mr-1.5" />
+            <Layers className="h-4 w-4 shrink-0 mr-1.5" />
             Played ({playedCards.length})
           </TabsTrigger>
         </TabsList>

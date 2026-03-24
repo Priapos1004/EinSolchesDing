@@ -44,6 +44,7 @@ export interface GameStateEvent {
   players: PlayerInfo[];
   your_hand: Card[];
   played_cards: Card[];
+  max_cards: number;
   active_vote: VoteState | null;
   winner: { player_index: number; display_name: string } | null;
   zero_cards_player: { player_index: number; display_name: string } | null;

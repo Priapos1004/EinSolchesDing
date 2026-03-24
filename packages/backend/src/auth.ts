@@ -17,7 +17,7 @@ export interface SessionTokenPayload {
 export async function createAdminToken(username: string): Promise<string> {
   return new SignJWT({ sub: username, role: "admin" })
     .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime("24h")
+    .setExpirationTime("48h")
     .sign(secret);
 }
 
@@ -32,7 +32,7 @@ export async function createSessionToken(
     display_name: displayName,
   })
     .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime("24h")
+    .setExpirationTime("48h")
     .sign(secret);
 }
 

@@ -22,6 +22,7 @@ interface GameStore {
   players: PlayerInfo[];
   yourHand: Card[];
   playedCards: Card[];
+  maxCards: number;
   activeVote: VoteState | null;
   winner: { player_index: number; display_name: string } | null;
   zeroCardsPlayer: { player_index: number; display_name: string } | null;
@@ -49,6 +50,7 @@ export const useGameStore = create<GameStore>((set) => ({
   players: [],
   yourHand: [],
   playedCards: [],
+  maxCards: 7,
   activeVote: null,
   winner: null,
   zeroCardsPlayer: null,
@@ -66,6 +68,7 @@ export const useGameStore = create<GameStore>((set) => ({
           players: event.players,
           yourHand: event.your_hand,
           playedCards: event.played_cards,
+          maxCards: event.max_cards,
           activeVote: event.active_vote,
           winner: event.winner ?? null,
           zeroCardsPlayer: event.zero_cards_player ?? null,
@@ -148,6 +151,7 @@ export const useGameStore = create<GameStore>((set) => ({
       players: [],
       yourHand: [],
       playedCards: [],
+      maxCards: 7,
       activeVote: null,
       winner: null,
       zeroCardsPlayer: null,

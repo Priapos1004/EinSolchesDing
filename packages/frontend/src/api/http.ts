@@ -30,6 +30,14 @@ export function setSessionToken(gameId: string, token: string): void {
   sessionStorage.setItem(`session_${gameId}`, token);
 }
 
+export function getInviteToken(gameId: string): string | null {
+  return sessionStorage.getItem(`invite_${gameId}`);
+}
+
+export function setInviteToken(gameId: string, token: string): void {
+  sessionStorage.setItem(`invite_${gameId}`, token);
+}
+
 // Admin endpoints
 export async function adminLogin(username: string, password: string) {
   return request<{ token: string }>("/admin/login", {

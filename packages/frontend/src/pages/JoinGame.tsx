@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import { getGameInfo, joinGame, setSessionToken } from "../api/http";
+import { getGameInfo, joinGame, setSessionToken, setInviteToken } from "../api/http";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -48,6 +48,7 @@ export default function JoinGame() {
     try {
       const result = await joinGame(gameId, inviteToken, displayName.trim());
       setSessionToken(gameId, result.session_token);
+      setInviteToken(gameId, inviteToken);
       navigate(`/game/${gameId}`);
     } catch (err: any) {
       setError(err.message || "Failed to join");
@@ -65,7 +66,7 @@ export default function JoinGame() {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
-      <div className="bg-card border border-border p-8 rounded-xl shadow-2xl w-full max-w-sm space-y-5 animate-fade-in-up">
+      <div className="bg-card border border-border p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-[calc(100vw-2rem)] sm:max-w-sm space-y-5 animate-fade-in-up">
         <div className="text-center space-y-1">
           <h1 className="text-2xl font-bold tracking-tight">EinSolchesDing</h1>
           <p className="text-muted-foreground text-sm">Join Game</p>

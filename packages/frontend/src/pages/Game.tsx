@@ -2,31 +2,35 @@ import { useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGameStore, useIsMyTurn } from "../store/gameStore";
 import { connectSSE } from "../api/sse";
-import { getSessionToken } from "../api/http";
+import { getSessionToken, getInviteToken } from "../api/http";
 import PlayerTabs from "../components/PlayerTabs";
 import CardList from "../components/CardList";
 import ActionBar from "../components/ActionBar";
 import VoteModal from "../components/VoteModal";
 import VoteResultModal from "../components/VoteResultModal";
 import WinnerModal from "../components/WinnerModal";
-import { Badge } from "@/components/ui/badge";
-import { Loader2, AlertTriangle, Zap } from "lucide-react";
-import { toast } from "sonner";
+import { Loader2, AlertTriangle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function Game() {
   const { gameId } = useParams<{ gameId: string }>();
   const navigate = useNavigate();
-  const { status, handleEvent, reset, zeroCardsPlayer, yourIndex } = useGameStore();
+  const { status, handleEvent, reset, zeroCardsPlayer, yourIndex, playedCards, maxCards, players, currentPlayer, activeVote } = useGameStore();
   const isMyTurn = useIsMyTurn();
+
+  const prevPlayerIndex = (currentPlayer - 1 + players.length) % players.length;
+  const prevPlayerName = players.find((p) => p.index === prevPlayerIndex)?.name ?? "?";
+  const maxCardsReached = playedCards.length >= maxCards && !activeVote && !zeroCardsPlayer;
   const cleanupRef = useRef<(() => void) | null>(null);
-  const prevTurnRef = useRef(false);
 
   useEffect(() => {
     if (!gameId) return;
 
     const sessionToken = getSessionToken(gameId);
     if (!sessionToken) {
-      navigate(`/join/${gameId}`);
+      const inviteToken = getInviteToken(gameId);
+      const query = inviteToken ? `?token=${inviteToken}` : "";
+      navigate(`/join/${gameId}${query}`);
       return;
     }
 
@@ -37,17 +41,6 @@ export default function Game() {
       reset();
     };
   }, [gameId]);
-
-  // Toast notification when it becomes your turn
-  useEffect(() => {
-    if (isMyTurn && !prevTurnRef.current) {
-      toast("Your turn!", {
-        icon: <Zap className="h-4 w-4 text-primary" />,
-        duration: 3000,
-      });
-    }
-    prevTurnRef.current = isMyTurn;
-  }, [isMyTurn]);
 
   if (!gameId) return null;
 
@@ -67,20 +60,29 @@ export default function Game() {
   }
 
   return (
-    <div className="max-w-lg mx-auto p-4 pb-24 min-h-screen animate-fade-in">
+    <div
+      className={cn(
+        "max-w-lg mx-auto p-4 pb-24 min-h-dvh animate-fade-in rounded-lg",
+        isMyTurn && !zeroCardsPlayer && "animate-pulse-border"
+      )}
+    >
       <h1 className="text-xl font-bold text-center mb-4 tracking-tight">EinSolchesDing</h1>
 
       {zeroCardsPlayer && zeroCardsPlayer.player_index !== yourIndex && (
         <div className="flex items-center gap-2 bg-destructive/15 border border-destructive/30 text-destructive py-2.5 px-4 rounded-lg mb-3 text-sm font-medium animate-fade-in">
           <AlertTriangle className="h-4 w-4 shrink-0" />
-          {zeroCardsPlayer.display_name} has no cards left. You have to challenge!
+          {isMyTurn
+            ? `You must challenge ${zeroCardsPlayer.display_name} as they have no more cards`
+            : `${zeroCardsPlayer.display_name} has no more cards`}
         </div>
       )}
 
-      {isMyTurn && !zeroCardsPlayer && (
-        <div className="flex items-center justify-center gap-2 bg-primary/15 border border-primary/30 text-primary py-2.5 px-4 rounded-lg mb-3 animate-fade-in">
-          <Zap className="h-4 w-4" />
-          <span className="text-sm font-semibold">Your turn!</span>
+      {maxCardsReached && (
+        <div className="flex items-center gap-2 bg-destructive/15 border border-destructive/30 text-destructive py-2.5 px-4 rounded-lg mb-3 text-sm font-medium animate-fade-in">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          {isMyTurn
+            ? `You must challenge ${prevPlayerName} as ${maxCards} cards have been played`
+            : `Maximum cards played (${maxCards}). Waiting for challenge...`}
         </div>
       )}
 

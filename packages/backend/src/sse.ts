@@ -111,6 +111,7 @@ export async function broadcastGameState(
       })),
       your_hand: gameState.player_hands[playerIndex] ?? [],
       played_cards: gameState.played_cards,
+      max_cards: gameState.max_cards,
       active_vote: vote,
       winner: winnerPlayer ? { player_index: gameState.winner, display_name: winnerPlayer.display_name } : null,
       zero_cards_player: zeroCardsPlayer ? { player_index: gameState.zero_cards_player, display_name: zeroCardsPlayer.display_name } : null,

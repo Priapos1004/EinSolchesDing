@@ -10,11 +10,14 @@ interface Props {
 }
 
 export default function ActionBar({ gameId }: Props) {
-  const { playedCards, activeVote } = useGameStore();
+  const { playedCards, activeVote, players, currentPlayer } = useGameStore();
   const isMyTurn = useIsMyTurn();
   const [loading, setLoading] = useState(false);
 
   const canChallenge = playedCards.length > 0 && !activeVote && isMyTurn;
+
+  const prevPlayerIndex = (currentPlayer - 1 + players.length) % players.length;
+  const prevPlayerName = players.find((p) => p.index === prevPlayerIndex)?.name ?? "?";
 
   const handleChallenge = async () => {
     const sessionToken = getSessionToken(gameId);
@@ -31,7 +34,7 @@ export default function ActionBar({ gameId }: Props) {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border p-4 animate-slide-up">
+    <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] animate-slide-up">
       <div className="max-w-lg mx-auto">
         <Button
           onClick={handleChallenge}
@@ -41,11 +44,11 @@ export default function ActionBar({ gameId }: Props) {
           className="w-full"
         >
           {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
           ) : (
-            <ShieldAlert className="h-4 w-4" />
+            <ShieldAlert className="h-4 w-4 shrink-0" />
           )}
-          {loading ? "Starting vote..." : "Challenge (Was the answer valid?)"}
+          {loading ? "Starting vote..." : `Challenge ${prevPlayerName}`}
         </Button>
       </div>
     </div>

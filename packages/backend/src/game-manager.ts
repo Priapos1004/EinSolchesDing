@@ -2,7 +2,7 @@ import { redis } from "bun";
 import type { Card, Language, VoteState, GameStatus } from "@esd/shared";
 import type { GameState } from "./game-logic";
 
-const TTL = 86400; // 24 hours
+const TTL = 172800; // 48 hours
 
 function key(gameId: string, ...parts: string[]): string {
   return `esd:${gameId}:${parts.join(":")}`;
@@ -208,6 +208,28 @@ export class GameManager {
 
   async deleteVote(gameId: string): Promise<void> {
     await redis.del(key(gameId, "vote"));
+  }
+
+  // Refresh TTL on all keys for a game (call on SSE connect and periodically)
+  async refreshTTL(gameId: string): Promise<void> {
+    const metaKey = key(gameId, "meta");
+    const meta = await redis.hgetall(metaKey);
+    if (!meta || !meta.player_count) return;
+
+    const playerCount = parseInt(meta.player_count);
+    const keys = [
+      metaKey,
+      key(gameId, "players"),
+      key(gameId, "played"),
+      key(gameId, "draw_stack"),
+      key(gameId, "vote"),
+    ];
+    for (let i = 0; i < playerCount; i++) {
+      keys.push(key(gameId, "hand", String(i)));
+    }
+    for (const k of keys) {
+      await redis.expire(k, TTL);
+    }
   }
 
   // Delete entire game

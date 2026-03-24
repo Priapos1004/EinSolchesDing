@@ -26,6 +26,19 @@ export async function handleSSE(
   // Mark player as connected
   await gameManager.setPlayerConnected(gameId, session.player_index, true);
 
+  // Refresh TTL on connect
+  await gameManager.refreshTTL(gameId);
+
+  // Refresh TTL periodically (every 30 minutes) while connected
+  const interval = setInterval(() => {
+    gameManager.refreshTTL(gameId).catch(() => {});
+  }, 30 * 60 * 1000);
+
+  // Clean up interval when request is aborted (client disconnects)
+  req.signal.addEventListener("abort", () => {
+    clearInterval(interval);
+  });
+
   const stream = createSSEStream(gameId, session.player_index);
 
   const response = new Response(stream, {
