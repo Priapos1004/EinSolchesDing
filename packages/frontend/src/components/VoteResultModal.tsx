@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogFooter,
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
@@ -54,9 +55,11 @@ export default function VoteResultModal() {
           </DialogDescription>
         </DialogHeader>
 
-        <Button onClick={clearVoteResult} className="w-full mt-2">
-          OK
-        </Button>
+        <DialogFooter>
+          <Button onClick={clearVoteResult} className="w-full">
+            OK
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

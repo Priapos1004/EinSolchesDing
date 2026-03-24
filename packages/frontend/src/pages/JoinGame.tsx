@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Users, Globe, Loader2, UserPlus } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function JoinGame() {
   const { gameId } = useParams<{ gameId: string }>();
@@ -65,7 +66,10 @@ export default function JoinGame() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4">
+    <div className="flex items-center justify-center min-h-screen p-4 relative">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="bg-card border border-border p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-[calc(100vw-2rem)] sm:max-w-sm space-y-5 animate-fade-in-up">
         <div className="text-center space-y-1">
           <h1 className="text-2xl font-bold tracking-tight">EinSolchesDing</h1>

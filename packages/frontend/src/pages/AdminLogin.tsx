@@ -4,6 +4,7 @@ import { adminLogin } from "../api/http";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LogIn } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function AdminLogin() {
   const [username, setUsername] = useState("");
@@ -28,7 +29,10 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4">
+    <div className="flex items-center justify-center min-h-screen p-4 relative">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <form
         onSubmit={handleSubmit}
         className="bg-card border border-border p-8 rounded-xl shadow-2xl w-full max-w-sm space-y-5 animate-fade-in-up"

@@ -23,7 +23,16 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(git check-ignore:*)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "Bash(xargs ls:*)",
+      "Bash(git -C /Users/samuelbrinkmann/Documents/GitHub/EinSolchesDing log --oneline -20)",
+      "Bash(git -C /Users/samuelbrinkmann/Documents/GitHub/EinSolchesDing diff HEAD~2..HEAD -- .gitignore)",
+      "Bash(find /Users/samuelbrinkmann/Documents/GitHub/EinSolchesDing/packages/frontend -type f -name *.html)",
+      "WebFetch(domain:themes.shadcn.com)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "WebFetch(domain:shadcn-ui-theme.vercel.app)",
+      "Bash(bunx --bun shadcn@latest init --preset b7BFcDklE --yes)",
+      "Bash(git status:*)"
     ]
   }
 }

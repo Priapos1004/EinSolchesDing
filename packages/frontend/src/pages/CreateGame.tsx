@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Copy, Check, Plus, Minus, Gamepad2, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function CreateGame() {
   const [playerCount, setPlayerCount] = useState(2);
@@ -44,7 +45,10 @@ export default function CreateGame() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4">
+    <div className="flex items-center justify-center min-h-screen p-4 relative">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="bg-card border border-border p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-[calc(100vw-2rem)] sm:max-w-md space-y-6 animate-fade-in-up">
         <div className="text-center">
           <h1 className="text-2xl font-bold tracking-tight">Create Game</h1>
@@ -63,7 +67,7 @@ export default function CreateGame() {
               <label className="text-muted-foreground text-sm font-medium text-center block">Players</label>
               <div className="flex items-center justify-center gap-4">
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="icon"
                   onClick={() => setPlayerCount(Math.max(2, playerCount - 1))}
                   disabled={playerCount <= 2}
@@ -74,7 +78,7 @@ export default function CreateGame() {
                   {playerCount}
                 </span>
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="icon"
                   onClick={() => setPlayerCount(Math.min(5, playerCount + 1))}
                   disabled={playerCount >= 5}

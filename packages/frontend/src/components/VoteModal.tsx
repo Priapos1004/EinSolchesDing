@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogFooter,
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
@@ -124,7 +125,7 @@ export default function VoteModal({ gameId }: Props) {
             </span>
           </div>
         ) : (
-          <div className="flex gap-3 pt-1">
+          <DialogFooter className="flex-row">
             <Button
               onClick={() => handleVote(true)}
               disabled={loading}
@@ -143,7 +144,7 @@ export default function VoteModal({ gameId }: Props) {
               <ThumbsDown className="h-4 w-4 shrink-0" />
               No, invalid
             </Button>
-          </div>
+          </DialogFooter>
         )}
       </DialogContent>
     </Dialog>

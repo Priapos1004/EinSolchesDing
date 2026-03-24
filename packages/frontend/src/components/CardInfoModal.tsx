@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogFooter,
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
@@ -52,7 +53,7 @@ export default function CardInfoModal({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex gap-3 pt-4">
+        <DialogFooter className="flex-row">
           {canPlay && (
             <Button
               onClick={handlePlay}
@@ -71,7 +72,7 @@ export default function CardInfoModal({
           <Button onClick={onClose} variant="secondary" className="flex-1">
             Close
           </Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

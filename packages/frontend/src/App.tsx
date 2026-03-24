@@ -16,7 +16,7 @@ export default function App() {
         <Route path="*" element={<Navigate to="/admin/login" replace />} />
       </Routes>
       <Toaster
-        theme="dark"
+        theme="system"
         position="top-center"
         toastOptions={{
           style: {

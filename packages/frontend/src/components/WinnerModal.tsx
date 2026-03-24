@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogFooter,
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
@@ -37,10 +38,12 @@ export default function WinnerModal() {
           </DialogDescription>
         </DialogHeader>
 
-        <Button onClick={() => navigate("/")} className="w-full mt-2">
-          <Home className="h-4 w-4" />
-          Back to Menu
-        </Button>
+        <DialogFooter>
+          <Button onClick={() => navigate("/")} className="w-full">
+            <Home className="h-4 w-4" />
+            Back to Menu
+          </Button>
+        </DialogFooter>
         {isYou && <ConfettiEffect />}
       </DialogContent>
     </Dialog>

@@ -10,7 +10,7 @@ import VoteModal from "../components/VoteModal";
 import VoteResultModal from "../components/VoteResultModal";
 import WinnerModal from "../components/WinnerModal";
 import { Loader2, AlertTriangle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 function WarningBanner({ children }: { children: React.ReactNode }) {
   return (
@@ -68,13 +68,17 @@ export default function Game() {
   }
 
   return (
-    <div
-      className={cn(
-        "max-w-lg mx-auto p-4 pb-24 min-h-dvh animate-fade-in rounded-lg",
-        isMyTurn && !zeroCardsPlayer && "animate-pulse-border"
+    <>
+      {isMyTurn && !zeroCardsPlayer && (
+        <div className="fixed inset-0 pointer-events-none animate-pulse-border z-40" />
       )}
-    >
-      <h1 className="text-xl font-bold text-center mb-4 tracking-tight">EinSolchesDing</h1>
+      <div className="max-w-lg mx-auto p-4 pb-24 min-h-dvh animate-fade-in">
+      <div className="flex items-center justify-center mb-4 relative">
+        <h1 className="text-xl font-bold text-center tracking-tight">EinSolchesDing</h1>
+        <div className="absolute right-0">
+          <ThemeToggle />
+        </div>
+      </div>
 
       {zeroCardsPlayer && zeroCardsPlayer.player_index !== yourIndex && (
         <WarningBanner>
@@ -99,5 +103,6 @@ export default function Game() {
       <VoteResultModal />
       <WinnerModal />
     </div>
+    </>
   );
 }
