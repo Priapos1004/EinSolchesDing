@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ThumbsUp, ThumbsDown, Loader2, Scale, Layers, ChevronDown, ChevronUp } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Loader2, Scale, Layers, ChevronDown, ChevronUp, Users } from "lucide-react";
 
 interface Props {
   gameId: string;
@@ -35,8 +35,7 @@ export default function VoteModal({ gameId }: Props) {
   if (!activeVote) return null;
 
   const isTarget = yourIndex === activeVote.target;
-  const yesCount = activeVote.votes_yes.length;
-  const noCount = activeVote.votes_no.length;
+  const totalVotes = activeVote.votes_yes.length + activeVote.votes_no.length;
 
   const handleVote = async (valid: boolean) => {
     const sessionToken = getSessionToken(gameId);
@@ -72,15 +71,11 @@ export default function VoteModal({ gameId }: Props) {
           </DialogDescription>
         </DialogHeader>
 
-        {/* Vote tally */}
-        <div className="flex justify-center gap-4 py-2">
-          <Badge variant="success" className="text-sm px-3 py-1 gap-1.5">
-            <ThumbsUp className="h-3.5 w-3.5 shrink-0" />
-            {yesCount}
-          </Badge>
-          <Badge variant="destructive" className="text-sm px-3 py-1 gap-1.5">
-            <ThumbsDown className="h-3.5 w-3.5 shrink-0" />
-            {noCount}
+        {/* Vote progress */}
+        <div className="flex justify-center py-2">
+          <Badge variant="secondary" className="text-sm px-3 py-1 gap-1.5">
+            <Users className="h-3.5 w-3.5 shrink-0" />
+            {totalVotes} / {activeVote.votes_needed} voted
           </Badge>
         </div>
 

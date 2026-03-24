@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Trophy, Home } from "lucide-react";
-import { fireConfetti } from "@/lib/confetti";
+import { fireConfetti, fireLoserConfetti } from "@/lib/confetti";
 
 export default function WinnerModal() {
   const { winner, yourIndex } = useGameStore();
@@ -44,16 +44,13 @@ export default function WinnerModal() {
             Back to Menu
           </Button>
         </DialogFooter>
-        {isYou && <ConfettiEffect />}
+        <ConfettiEffect fire={isYou ? fireConfetti : fireLoserConfetti} />
       </DialogContent>
     </Dialog>
   );
 }
 
-function ConfettiEffect() {
-  useEffect(() => {
-    const cancel = fireConfetti();
-    return cancel;
-  }, []);
+function ConfettiEffect({ fire }: { fire: () => () => void }) {
+  useEffect(() => fire(), []);
   return null;
 }

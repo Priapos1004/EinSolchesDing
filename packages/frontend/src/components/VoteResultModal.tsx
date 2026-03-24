@@ -8,7 +8,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, XCircle, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export default function VoteResultModal() {
   const { voteResult, clearVoteResult, yourIndex } = useGameStore();
@@ -54,6 +55,18 @@ export default function VoteResultModal() {
             {message}
           </DialogDescription>
         </DialogHeader>
+
+        {/* Vote tally */}
+        <div className="flex justify-center gap-4 py-2">
+          <Badge variant="success" className="text-sm px-3 py-1 gap-1.5">
+            <ThumbsUp className="h-3.5 w-3.5 shrink-0" />
+            {voteResult.votes_yes}
+          </Badge>
+          <Badge variant="destructive" className="text-sm px-3 py-1 gap-1.5">
+            <ThumbsDown className="h-3.5 w-3.5 shrink-0" />
+            {voteResult.votes_no}
+          </Badge>
+        </div>
 
         <DialogFooter>
           <Button onClick={clearVoteResult} className="w-full">

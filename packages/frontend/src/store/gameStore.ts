@@ -124,6 +124,8 @@ export const useGameStore = create<GameStore>((set) => ({
             valid: event.valid,
             target: event.target,
             cards_drawn_by: event.cards_drawn_by,
+            votes_yes: event.votes_yes,
+            votes_no: event.votes_no,
           },
         });
         break;

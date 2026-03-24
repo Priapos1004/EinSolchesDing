@@ -23,19 +23,19 @@ function authHeaders(token: string): Record<string, string> {
 }
 
 export function getSessionToken(gameId: string): string | null {
-  return sessionStorage.getItem(`session_${gameId}`);
+  return localStorage.getItem(`session_${gameId}`);
 }
 
 export function setSessionToken(gameId: string, token: string): void {
-  sessionStorage.setItem(`session_${gameId}`, token);
+  localStorage.setItem(`session_${gameId}`, token);
 }
 
 export function getInviteToken(gameId: string): string | null {
-  return sessionStorage.getItem(`invite_${gameId}`);
+  return localStorage.getItem(`invite_${gameId}`);
 }
 
 export function setInviteToken(gameId: string, token: string): void {
-  sessionStorage.setItem(`invite_${gameId}`, token);
+  localStorage.setItem(`invite_${gameId}`, token);
 }
 
 // Admin endpoints

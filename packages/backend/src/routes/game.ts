@@ -91,6 +91,7 @@ export async function handleJoinGame(
   // If all players have joined, start the game
   if (playerIndex + 1 === state.player_count) {
     state.status = "playing";
+    state.current_player = Math.floor(Math.random() * state.player_count);
     await gameManager.updateGameState(state);
   }
 
@@ -287,6 +288,8 @@ export async function handleVoteCast(
       valid,
       target: vote.target,
       cards_drawn_by: loserIndex,
+      votes_yes: vote.votes_yes.length,
+      votes_no: vote.votes_no.length,
     });
 
     if (state.winner !== -1) {

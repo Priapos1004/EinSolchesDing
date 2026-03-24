@@ -76,6 +76,8 @@ export interface VoteResultEvent {
   valid: boolean;
   target: number;
   cards_drawn_by: number;
+  votes_yes: number;
+  votes_no: number;
 }
 
 export interface WinnerEvent {
