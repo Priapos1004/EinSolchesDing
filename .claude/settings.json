@@ -16,7 +16,14 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:80)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/api/health)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/)",
-      "Bash(docker exec:*)"
+      "Bash(docker exec:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(docker build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(echo \"exit: $?\")"
     ]
   }
 }
