@@ -1,0 +1,9 @@
+{
+  "name": "einsolchesding",
+  "private": true,
+  "workspaces": [
+    "packages/backend",
+    "packages/frontend",
+    "packages/shared"
+  ]
+}

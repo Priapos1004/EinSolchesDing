@@ -1,0 +1,21 @@
+FROM oven/bun:1 AS base
+WORKDIR /app
+
+# Copy workspace root
+COPY package.json ./
+
+# Copy package.json for all workspaces (bun requires all to be present)
+COPY packages/backend/package.json packages/backend/
+COPY packages/shared/package.json packages/shared/
+COPY packages/frontend/package.json packages/frontend/
+
+# Install dependencies
+RUN bun install --production
+
+# Copy source code
+COPY packages/backend/ packages/backend/
+COPY packages/shared/ packages/shared/
+
+EXPOSE 8000
+
+CMD ["bun", "run", "packages/backend/src/index.ts"]
