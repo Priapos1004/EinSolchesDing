@@ -29,7 +29,9 @@
       "WebFetch(domain:ui.shadcn.com)",
       "WebFetch(domain:shadcn-ui-theme.vercel.app)",
       "Bash(bunx --bun shadcn@latest init --preset b7BFcDklE --yes)",
-      "Bash(git status:*)"
+      "Bash(git status:*)",
+      "Bash(git tag:*)",
+      "Bash(gh release:*)"
     ]
   }
 }
