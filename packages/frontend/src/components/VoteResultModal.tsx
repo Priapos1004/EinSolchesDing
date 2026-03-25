@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { NumberTicker } from "@/components/ui/number-ticker";
 
 export default function VoteResultModal() {
   const { voteResult, clearVoteResult, yourIndex } = useGameStore();
@@ -60,11 +61,11 @@ export default function VoteResultModal() {
         <div className="flex justify-center gap-4 py-2">
           <Badge variant="success" className="text-sm px-3 py-1 gap-1.5">
             <ThumbsUp className="h-3.5 w-3.5 shrink-0" />
-            {voteResult.votes_yes}
+            <NumberTicker value={voteResult.votes_yes} />
           </Badge>
           <Badge variant="destructive" className="text-sm px-3 py-1 gap-1.5">
             <ThumbsDown className="h-3.5 w-3.5 shrink-0" />
-            {voteResult.votes_no}
+            <NumberTicker value={voteResult.votes_no} />
           </Badge>
         </div>
 

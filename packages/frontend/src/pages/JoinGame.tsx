@@ -30,15 +30,31 @@ export default function JoinGame() {
       setLoading(false);
       return;
     }
-    getGameInfo(gameId, inviteToken)
-      .then((info) => {
-        setGameInfo(info);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message || "Failed to load game");
-        setLoading(false);
-      });
+
+    let interval: ReturnType<typeof setInterval> | null = null;
+
+    const fetchInfo = () => {
+      getGameInfo(gameId, inviteToken)
+        .then((info) => {
+          setGameInfo((prev) => {
+            if (prev && prev.joined_count === info.joined_count) return prev;
+            return info;
+          });
+          setLoading((v) => v ? false : v);
+          if (info.joined_count >= info.player_count && interval) {
+            clearInterval(interval);
+            interval = null;
+          }
+        })
+        .catch((err) => {
+          setError(err.message || "Failed to load game");
+          setLoading((v) => v ? false : v);
+        });
+    };
+
+    fetchInfo();
+    interval = setInterval(fetchInfo, 3000);
+    return () => { if (interval) clearInterval(interval); };
   }, [gameId, inviteToken]);
 
   const handleJoin = async (e: React.FormEvent) => {
