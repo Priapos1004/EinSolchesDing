@@ -160,9 +160,17 @@ export async function handleVoteStart(
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  if (session.game_id !== gameId) {
+    return Response.json({ error: "Wrong game" }, { status: 403 });
+  }
+
   const state = await gameManager.loadGameState(gameId);
   if (!state) {
     return Response.json({ error: "Game not found" }, { status: 404 });
+  }
+
+  if (state.status !== "playing") {
+    return Response.json({ error: "Game is not in progress" }, { status: 400 });
   }
 
   if (state.played_cards.length === 0) {
@@ -222,6 +230,9 @@ export async function handleVoteCast(
   const session = await getSession(req);
   if (!session) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (session.game_id !== gameId) {
+    return Response.json({ error: "Wrong game" }, { status: 403 });
   }
 
   const body = await parseBody(req, castVoteSchema);

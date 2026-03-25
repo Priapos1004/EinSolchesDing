@@ -1,6 +1,6 @@
 import { verifySessionToken } from "../auth";
 import { gameManager } from "../game-manager";
-import { createSSEStream, removeConnection, broadcastGameState, getConnectedPlayers } from "../sse";
+import { createSSEStream, removeConnection, broadcastGameState } from "../sse";
 
 // Per-game TTL refresh interval (shared across all connections for that game)
 const gameIntervals = new Map<string, { interval: Timer; refCount: number }>();
